@@ -10,6 +10,7 @@ namespace JocDameMultyplayer
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Client client1;
+        private Texture2D _texture;
         private Color _color;
 
         public Game1()
@@ -20,6 +21,7 @@ namespace JocDameMultyplayer
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             client1 = new Client(); // Se declara un nou client participant la joc
+            //_texture = Content.Load<Texture2D>();
             _color = Color.CornflowerBlue;
 
         }
@@ -36,6 +38,7 @@ namespace JocDameMultyplayer
                 _color = Color.Red;
             }
             base.Initialize();
+            _texture = Content.Load<Texture2D>("checkerBlack");
             ///Se fac setarile pentru autosize
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnWindowClientSizeChanged;
@@ -69,6 +72,14 @@ namespace JocDameMultyplayer
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(_color);
+
+            _spriteBatch.Begin();
+            if (client1.Active)
+            {
+                _spriteBatch.Draw(_texture, new Rectangle(client1.PlayerDetails.XPosiion, client1.PlayerDetails.YPosiion, 50, 50), Color.Black);
+            }
+            
+            _spriteBatch.End();
 
             // TODO: Add your drawing code here
 

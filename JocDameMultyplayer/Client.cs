@@ -10,17 +10,21 @@ namespace JocDameMultyplayer
     class Client
     {
         private NetClient _client;
+        public PlayerDetails PlayerDetails { get; set; }
+        public bool Active { get; set; }
 
         public bool Start()
         {
-            var player = new PlayerDetails() { Name = "Razvan" }; // Se creaza un player cu numele x
+            var random = new Random();
             _client = new NetClient(new NetPeerConfiguration("JocDeDame")); //se creaza client-ul connectat la server
             _client.Start();  // se porneste clientul
+
+            PlayerDetails = new PlayerDetails("name_" + random.Next(0, 100),0,0); // Se creaza un player cu numele x
+
             var outmsg = _client.CreateMessage();   //se creaza un mesaj din partea clientului
-            Console.WriteLine(outmsg);              //Se Afiseaza in consola mesajul tocmai creat de client
             outmsg.Write((byte)PacketType.Login);   //se scrie in mesaj ce tip de packet de doreste, iar in acest caz este un packet de type Login
-            outmsg.WriteAllProperties(player);      // Dupa ce ii trimitem server-
-            Console.WriteLine(outmsg.ToString());   // SE afiseaza pe consola ce mesaj s-a creat
+            outmsg.Write(PlayerDetails.Name); 
+            //outmsg.WriteAllProperties(PlayerDetails);      // Dupa ce ii trimitem server-
             _client.Connect("localhost", 14242, outmsg);    // se incearca connectarea la server si se trimite si mesajul
             return EstablishInfo();     //se returneaza True daca s-a reusit connectarea la server
 
@@ -46,9 +50,11 @@ namespace JocDameMultyplayer
                             var data_from_server = incmessage.ReadByte();       //citim mesajul de la server
                             if(data_from_server == (byte)PacketType.Login)      // Identificam daca mesajul este tot de tip login pentru a se realiza conexiunea
                             {
-                                var accepted = incmessage.ReadBoolean(); // daca este de tip login atunci citim urmatorul packet care ar trebui sa fie approv-ul de la server
-                                if (accepted)   // daca este pozitiv atunci pornim clientul
+                                Active = incmessage.ReadBoolean(); // daca este de tip login atunci citim urmatorul packet care ar trebui sa fie approv-ul de la server
+                                if (Active)   // daca este pozitiv atunci pornim clientul
                                 {
+                                    PlayerDetails.XPosiion = incmessage.ReadInt32(); 
+                                    PlayerDetails.YPosiion = incmessage.ReadInt32(); 
                                     return true;
                                 }
                                 else
