@@ -19,7 +19,7 @@ namespace JocDameMultyplayer
             
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            client1 = new Client();
+            client1 = new Client(); // Se declara un nou client participant la joc
             _color = Color.CornflowerBlue;
 
         }
@@ -36,6 +36,7 @@ namespace JocDameMultyplayer
                 _color = Color.Red;
             }
             base.Initialize();
+            ///Se fac setarile pentru autosize
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnWindowClientSizeChanged;
 
@@ -43,9 +44,8 @@ namespace JocDameMultyplayer
 
         private void OnWindowClientSizeChanged(object sender, EventArgs e)
         {
-            GraphicsDevice.Viewport = new Viewport(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
-
             // Other logic to handle the window size change
+            GraphicsDevice.Viewport = new Viewport(0, 0, Window.ClientBounds.Width, Window.ClientBounds.Height);
         }
 
 

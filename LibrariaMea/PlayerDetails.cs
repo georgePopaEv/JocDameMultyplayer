@@ -2,7 +2,7 @@
 
 namespace LibrariaMea
 {
-    public class LoginInformation
+    public class PlayerDetails
     {
         public string Name { get; set; }
     }

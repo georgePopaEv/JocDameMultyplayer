@@ -34,7 +34,7 @@ namespace Server
                             var data = incmesage.ReadByte();
                             if (data == (byte)PacketType.Login)
                             {
-                                var loginInformation = new LoginInformation();
+                                var loginInformation = new PlayerDetails();
                                 incmesage.ReadAllProperties(loginInformation);
                                 incmesage.SenderConnection.Approve();
                                 
