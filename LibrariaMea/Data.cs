@@ -1,6 +1,7 @@
 ﻿public enum PacketType
 {
     Login,
-    NewPlayer,
-    AllPlayers
+    PlayerPosition,
+    AllPlayers,
+    Input
 }

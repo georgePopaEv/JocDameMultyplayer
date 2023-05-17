@@ -1,5 +1,6 @@
 ﻿using System;
 using Lidgren.Network;
+
 namespace LibrariaMea
 {
     public class PlayerDetails
@@ -16,5 +17,10 @@ namespace LibrariaMea
             YPosiion = yPosiion;
         }
         public PlayerDetails() { }
+
+       /* public void Move(Keys key)
+        {
+
+        }*/
     }
 }

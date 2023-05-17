@@ -5,19 +5,20 @@ using System.Linq;
 using System.Text;
 using LibrariaMea;
 using Lidgren.Network;
+using Microsoft.Xna.Framework.Input;
 
 namespace JocDameMultyplayer
 {
     class Client
     {
         private NetClient _client;
-        public PlayerDetails PlayerDetails { get; set; }
-        public List<PlayerDetails> OtherPlayers { get; set; }
+        public List<PlayerDetails> Player { get; set; }
+        public string Username { get; set; }
         public bool Active { get; set; }
 
         public Client()
         {
-            OtherPlayers = new List<PlayerDetails>();
+            Player = new List<PlayerDetails>();
         }
 
         public bool Start()
@@ -26,16 +27,18 @@ namespace JocDameMultyplayer
             _client = new NetClient(new NetPeerConfiguration("JocDeDame")); //se creaza client-ul connectat la server
             _client.Start();  // se porneste clientul
 
-            PlayerDetails = new PlayerDetails("name_" + random.Next(0, 100),0,0); // Se creaza un player cu numele x
+            Username = "name_" + random.Next(0, 100); // Se creaza un player cu numele x
 
             var outmsg = _client.CreateMessage();   //se creaza un mesaj din partea clientului
             outmsg.Write((byte)PacketType.Login);   //se scrie in mesaj ce tip de packet de doreste, iar in acest caz este un packet de type Login
-            outmsg.Write(PlayerDetails.Name); 
+            outmsg.Write(Username); 
             //outmsg.WriteAllProperties(PlayerDetails);      // Dupa ce ii trimitem server-
             _client.Connect("localhost", 14242, outmsg);    // se incearca connectarea la server si se trimite si mesajul
             return EstablishInfo();     //se returneaza True daca s-a reusit connectarea la server
 
         }
+
+        
 
         private bool EstablishInfo()
         {
@@ -60,8 +63,6 @@ namespace JocDameMultyplayer
                                 Active = incmessage.ReadBoolean(); // daca este de tip login atunci citim urmatorul packet care ar trebui sa fie approv-ul de la server
                                 if (Active)   // daca este pozitiv atunci pornim clientul
                                 {
-                                    PlayerDetails.XPosiion = incmessage.ReadInt32(); 
-                                    PlayerDetails.YPosiion = incmessage.ReadInt32();
                                     ReceiveAllPlayers(incmessage);
                                     return true;
                                 }
@@ -87,10 +88,8 @@ namespace JocDameMultyplayer
                 var packageType = (PacketType)incmessage.ReadByte(); //se citeste ce fel de packet este
                 switch (packageType)
                 {
-                    case PacketType.NewPlayer:
-                        var player = new PlayerDetails();  // se creaza un player default
-                        incmessage.ReadAllProperties(player);  // se iau detaliile de la server si se transmit aici se adauga in aceasta variabila
-                        OtherPlayers.Add(player);
+                    case PacketType.PlayerPosition:
+                        ReadPlayer(incmessage);
                         break;
 
                     case PacketType.AllPlayers:
@@ -102,29 +101,55 @@ namespace JocDameMultyplayer
             }
         }
 
+/*        private void ReceivePlayerPosition(NetIncomingMessage incmessage)
+        {
+            var player = new PlayerDetails();  // se creaza un player default
+            incmessage.ReadAllProperties(player);
+            if (Player.Any(p => p.Name == player.Name))
+            {
+                var oldplayer = Player.FirstOrDefault(p => p.Name == player.Name);
+                oldplayer.XPosiion = player.XPosiion;
+                oldplayer.YPosiion = player.YPosiion;
+            }
+            else
+            {
+                Player.Add(player);
+            }
+            
+        }*/
+
+        private void ReadPlayer(NetIncomingMessage inc)
+        {
+            var player = new PlayerDetails();
+            inc.ReadAllProperties(player);
+            if (Player.Any(p => p.Name == player.Name))
+            {
+                var oldplayer = Player.FirstOrDefault(p => p.Name == player.Name);
+                oldplayer.XPosiion = player.XPosiion;
+                oldplayer.YPosiion = player.YPosiion;
+            }
+            else
+            {
+                Player.Add(player);
+            }
+        }
         private void ReceiveAllPlayers(NetIncomingMessage message)
         {
             var count = message.ReadInt32();
-            for ( int n = 0; n<count-1; n++)
+            for ( int n = 0; n<count; n++)
             {
-                var player = new PlayerDetails();
-                message.ReadAllProperties(player);
-                if (player.Name == PlayerDetails.Name)
-                {
-                    continue;
-                }
-
-                if(OtherPlayers.Any(p => p.Name == player.Name))
-                {
-                    var oldplayer = OtherPlayers.FirstOrDefault(p => p.Name == player.Name);
-                    oldplayer.XPosiion = player.XPosiion;
-                    oldplayer.YPosiion = player.YPosiion;
-                }
-                else
-                {
-                    OtherPlayers.Add(player);
-                }
+                ReadPlayer(message);
             }
+        }
+
+        public void SendInput(Keys key)
+        {
+            var outmessage = _client.CreateMessage();  //se creaza mesajul care se vrea sa se trimita la server
+            outmessage.Write((byte)PacketType.Input);  // se incarca tipul de mesaj care se vrea sa se trimita, de data asta este de tip Input (adica date legate de input)
+            outmessage.Write(Username);    // ii transmitem serverului numele nostru de client
+            outmessage.Write((byte)key);            // Atasam si key-ia apasata de client 
+            _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
+
         }
     }
 }

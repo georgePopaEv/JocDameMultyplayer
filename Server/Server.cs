@@ -4,6 +4,9 @@ using System.Text;
 using LibrariaMea;
 using Lidgren.Network;
 using System.Threading;
+using Microsoft.Xna.Framework.Input;
+using System.Linq;
+
 namespace Server
 {
     
@@ -43,6 +46,7 @@ namespace Server
                             break;
                         case NetIncomingMessageType.Data:
                             //Se va dezvolta logica pentru mesajele de tip data (informatii legate de player)
+                            Data(incmesage);
                             Console.WriteLine("Mesaj primit de la Client" + incmesage.ReadString());
                             break;
                         case NetIncomingMessageType.StatusChanged:
@@ -58,6 +62,54 @@ namespace Server
             }
         }
 
+        private void Data(NetIncomingMessage incmesage)
+        {
+            var packetType = (PacketType)incmesage.ReadByte();   // primeste de la client tipul de mesaj pe care vrea sa-l analizeze serverul
+            
+            switch (packetType)                 // in functie de tipul packet-ului se fac anumite operatiii
+            {
+                case PacketType.Input:          // pentru packet-ul cu date de tip Input 
+                    Input(incmesage);
+                    break;
+                default:
+
+                    break;
+            }
+
+        }
+
+        private void Input(NetIncomingMessage incmesage)
+        {
+            Console.WriteLine("Received new Input");
+            var name = incmesage.ReadString();                  // primeste numele clientului
+            var key = (Keys)incmesage.ReadByte();           //se citeste keya apasata de catre client
+            var player = _players.FirstOrDefault(p => p.Name == name);
+            if (player == null)
+            {
+                Console.WriteLine("NU am gasit player cu acest nume{0}", name);
+                return;
+            }
+            
+            switch (key)                // in functie de tasta apasata se ia o anumita decizie de catra server
+            {
+                case Keys.Down:
+                    player.YPosiion++;
+                    break;
+                case Keys.Up:
+                    player.YPosiion--;
+                    break;
+                case Keys.Right:
+                    player.XPosiion++;
+                    break;
+                case Keys.Left:
+                    player.XPosiion--;
+                    break;
+                default:
+                    break;
+            }
+            SendPlayerPosition(player, incmesage);
+        }
+
         private void ConnectionApproval(NetIncomingMessage incmesage)
         {
             Console.WriteLine("Client Connectat: " + incmesage.SenderConnection.RemoteEndPoint);
@@ -70,19 +122,20 @@ namespace Server
                 var outmsg = _server.CreateMessage();    //Serverul creaza un mesaj  // Mai cream un mesaj 
                 outmsg.Write((byte)PacketType.Login);   // Adauga in mesaj bite-ul pentru Login (faptul ca este mesaj de tip login)
                 outmsg.Write(true);                     //Acceptul pentru Client
-                outmsg.Write((int)player.XPosiion);
-                outmsg.Write((int)player.YPosiion);
-                Thread.Sleep(500);      // O pauza mica pentru Server de juma de secunda
+                //outmsg.WriteAllProperties(player);
+                //outmsg.Write((int)player.XPosiion);
+                //outmsg.Write((int)player.YPosiion);
+                //outmsg.Write(_players.Count-1);
                 outmsg.Write(_players.Count);
-                foreach (var player1 in _players)
+                Thread.Sleep(500);      // O pauza mica pentru Server de juma de secunda
+                for(int n = 0; n < _players.Count ; n++)
                 {
-                    if(player.Name != player1.Name)
-                        outmsg.WriteAllProperties(player1);
+                    outmsg.WriteAllProperties(_players[n]);
                 }
                 _server.SendMessage(outmsg, incmesage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0); //Trimiterea mesajului catre client si prelucrarea acestuia in Establish                                
-                SendNewPlayer(player, incmesage);
+                SendPlayerPosition(player, incmesage);
 
-                SendFullPlayerList();
+                //SendFullPlayerList();
                 //SendNewPlayer(player, incmesage);   // se trimite inapoi mesaj ca este un nou player adaugat in server , se va trata in client folder 
             }
             else
@@ -108,12 +161,12 @@ namespace Server
             return player;
         }
 
-        private void SendNewPlayer(PlayerDetails player, NetIncomingMessage inc)
+        private void SendPlayerPosition(PlayerDetails player, NetIncomingMessage inc)
         {
             var outmessage = _server.CreateMessage();           //se creaza mesaj pentru client 
-            outmessage.Write((byte)PacketType.NewPlayer);       // se scrie in mesaj faptul ca este un mesaj de tip Newplayer
+            outmessage.Write((byte)PacketType.PlayerPosition);       // se scrie in mesaj faptul ca este un mesaj de tip PLayerPosition
             outmessage.WriteAllProperties(player);              // Se scrie in mesaj detaliile despre noul player creat
-            _server.SendToAll(outmessage, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);  //se doreste sa se trimita catre toti conectati la server
+            _server.SendToAll(outmessage, NetDeliveryMethod.ReliableOrdered);  //se doreste sa se trimita catre toti conectati la server
         }
 
         private void SendFullPlayerList()

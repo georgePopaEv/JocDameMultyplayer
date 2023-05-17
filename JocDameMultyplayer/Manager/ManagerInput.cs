@@ -19,6 +19,9 @@ namespace JocDameMultyplayer.Manager
         {
             var state = Keyboard.GetState(); //se citeste starea tastaturii , care si ce pasta este apasata
             CheckKeyState(Keys.Down, state);
+            CheckKeyState(Keys.Up, state);
+            CheckKeyState(Keys.Right, state);
+            CheckKeyState(Keys.Left, state);
         }
 
         private void CheckKeyState(Keys key, KeyboardState state)

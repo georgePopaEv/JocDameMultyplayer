@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using JocDameMultyplayer.Manager;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -10,7 +11,10 @@ namespace JocDameMultyplayer
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Client client1;
+        private ManagerInput _managerInput;
         private Texture2D _texture;
+        private Texture2D _textureKingRed;
+
         private Color _color;
 
         public Game1()
@@ -23,6 +27,7 @@ namespace JocDameMultyplayer
             client1 = new Client(); // Se declara un nou client participant la joc
             //_texture = Content.Load<Texture2D>();
             _color = Color.CornflowerBlue;
+            _managerInput = new ManagerInput(client1);
 
         }
 
@@ -39,6 +44,7 @@ namespace JocDameMultyplayer
             }
             base.Initialize();
             _texture = Content.Load<Texture2D>("checkerBlack");
+            _textureKingRed = Content.Load<Texture2D>("checkerKingRed");
             ///Se fac setarile pentru autosize
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnWindowClientSizeChanged;
@@ -66,6 +72,7 @@ namespace JocDameMultyplayer
 
             // TODO: Add your update logic here
             client1.Update();
+            _managerInput.Update(gameTime.ElapsedGameTime.Milliseconds);
             base.Update(gameTime);
         }
 
@@ -76,11 +83,17 @@ namespace JocDameMultyplayer
             _spriteBatch.Begin();
             if (client1.Active)
             {
-                _spriteBatch.Draw(_texture, new Rectangle(client1.PlayerDetails.XPosiion, client1.PlayerDetails.YPosiion, 50, 50), Color.Black);
-
-                foreach (var otherplayer in client1.OtherPlayers)
+                foreach (var otherplayer in client1.Player)
                 {
-                    _spriteBatch.Draw(_texture, new Rectangle(otherplayer.XPosiion, otherplayer.YPosiion, 50, 50), Color.Purple);
+                    if(otherplayer.Name == client1.Username)
+                    {
+                        _spriteBatch.Draw(_textureKingRed, new Rectangle(otherplayer.XPosiion, otherplayer.YPosiion, 50, 50), Color.White);
+                    }
+                    else
+                    {
+                        _spriteBatch.Draw(_texture, new Rectangle(otherplayer.XPosiion, otherplayer.YPosiion, 50, 50), Color.White);
+                    }
+                    
                 }
             }
             
