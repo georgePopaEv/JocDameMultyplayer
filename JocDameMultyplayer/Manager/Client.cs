@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Text;
 using LibrariaMea;
 using Lidgren.Network;
@@ -11,7 +12,13 @@ namespace JocDameMultyplayer
     {
         private NetClient _client;
         public PlayerDetails PlayerDetails { get; set; }
+        public List<PlayerDetails> OtherPlayers { get; set; }
         public bool Active { get; set; }
+
+        public Client()
+        {
+            OtherPlayers = new List<PlayerDetails>();
+        }
 
         public bool Start()
         {
@@ -54,7 +61,8 @@ namespace JocDameMultyplayer
                                 if (Active)   // daca este pozitiv atunci pornim clientul
                                 {
                                     PlayerDetails.XPosiion = incmessage.ReadInt32(); 
-                                    PlayerDetails.YPosiion = incmessage.ReadInt32(); 
+                                    PlayerDetails.YPosiion = incmessage.ReadInt32();
+                                    ReceiveAllPlayers(incmessage);
                                     return true;
                                 }
                                 else
@@ -68,6 +76,55 @@ namespace JocDameMultyplayer
                 }
             }
             throw new NotImplementedException();
+        }
+
+        public void Update()
+        {
+            NetIncomingMessage incmessage;
+            while ((incmessage = _client.ReadMessage()) != null)
+            {
+                if (incmessage.MessageType != NetIncomingMessageType.Data) continue;
+                var packageType = (PacketType)incmessage.ReadByte(); //se citeste ce fel de packet este
+                switch (packageType)
+                {
+                    case PacketType.NewPlayer:
+                        var player = new PlayerDetails();  // se creaza un player default
+                        incmessage.ReadAllProperties(player);  // se iau detaliile de la server si se transmit aici se adauga in aceasta variabila
+                        OtherPlayers.Add(player);
+                        break;
+
+                    case PacketType.AllPlayers:
+                        ReceiveAllPlayers(incmessage);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        private void ReceiveAllPlayers(NetIncomingMessage message)
+        {
+            var count = message.ReadInt32();
+            for ( int n = 0; n<count-1; n++)
+            {
+                var player = new PlayerDetails();
+                message.ReadAllProperties(player);
+                if (player.Name == PlayerDetails.Name)
+                {
+                    continue;
+                }
+
+                if(OtherPlayers.Any(p => p.Name == player.Name))
+                {
+                    var oldplayer = OtherPlayers.FirstOrDefault(p => p.Name == player.Name);
+                    oldplayer.XPosiion = player.XPosiion;
+                    oldplayer.YPosiion = player.YPosiion;
+                }
+                else
+                {
+                    OtherPlayers.Add(player);
+                }
+            }
         }
     }
 }

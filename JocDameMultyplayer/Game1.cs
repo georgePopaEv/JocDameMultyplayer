@@ -65,7 +65,7 @@ namespace JocDameMultyplayer
                 Exit();
 
             // TODO: Add your update logic here
-
+            client1.Update();
             base.Update(gameTime);
         }
 
@@ -77,6 +77,11 @@ namespace JocDameMultyplayer
             if (client1.Active)
             {
                 _spriteBatch.Draw(_texture, new Rectangle(client1.PlayerDetails.XPosiion, client1.PlayerDetails.YPosiion, 50, 50), Color.Black);
+
+                foreach (var otherplayer in client1.OtherPlayers)
+                {
+                    _spriteBatch.Draw(_texture, new Rectangle(otherplayer.XPosiion, otherplayer.YPosiion, 50, 50), Color.Purple);
+                }
             }
             
             _spriteBatch.End();
