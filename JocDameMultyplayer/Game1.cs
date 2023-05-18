@@ -14,6 +14,7 @@ namespace JocDameMultyplayer
         private ManagerInput _managerInput;
         private Texture2D _texture;
         private Texture2D _textureKingRed;
+        private SpriteFont _font;
 
         private Color _color;
 
@@ -45,6 +46,7 @@ namespace JocDameMultyplayer
             base.Initialize();
             _texture = Content.Load<Texture2D>("checkerBlack");
             _textureKingRed = Content.Load<Texture2D>("checkerKingRed");
+            _font = Content.Load<SpriteFont>("File");
             ///Se fac setarile pentru autosize
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnWindowClientSizeChanged;
@@ -87,11 +89,13 @@ namespace JocDameMultyplayer
                 {
                     if(otherplayer.Name == client1.Username)
                     {
-                        _spriteBatch.Draw(_textureKingRed, new Rectangle(otherplayer.XPosiion, otherplayer.YPosiion, 50, 50), Color.White);
+                        _spriteBatch.DrawString(_font, otherplayer.Name, new Vector2(otherplayer.XPosition, otherplayer.YPosition - 20), Color.Red);
+                        _spriteBatch.Draw(_textureKingRed, new Rectangle(otherplayer.XPosition, otherplayer.YPosition, 50, 50), Color.White);
                     }
                     else
                     {
-                        _spriteBatch.Draw(_texture, new Rectangle(otherplayer.XPosiion, otherplayer.YPosiion, 50, 50), Color.White);
+                        _spriteBatch.DrawString(_font, otherplayer.Name, new Vector2(otherplayer.XPosition, otherplayer.YPosition - 20), Color.Black);
+                        _spriteBatch.Draw(_texture, new Rectangle(otherplayer.XPosition, otherplayer.YPosition, 50, 50), Color.White);
                     }
                     
                 }

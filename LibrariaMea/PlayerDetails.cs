@@ -7,14 +7,14 @@ namespace LibrariaMea
     {
         public string Name { get; set; }
         // public NetConnection Connection { get; set; }
-        public int XPosiion { get; set; }
-        public int YPosiion { get; set; } 
+        public int XPosition { get; set; }
+        public int YPosition { get; set; } 
 
         public PlayerDetails(string name, int xPosiion, int yPosiion)
         {
             Name = name;
-            XPosiion = xPosiion;
-            YPosiion = yPosiion;
+            XPosition = xPosiion;
+            YPosition = yPosiion;
         }
         public PlayerDetails() { }
 

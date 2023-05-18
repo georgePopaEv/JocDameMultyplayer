@@ -125,8 +125,8 @@ namespace JocDameMultyplayer
             if (Player.Any(p => p.Name == player.Name))
             {
                 var oldplayer = Player.FirstOrDefault(p => p.Name == player.Name);
-                oldplayer.XPosiion = player.XPosiion;
-                oldplayer.YPosiion = player.YPosiion;
+                oldplayer.XPosition = player.XPosition;
+                oldplayer.YPosition = player.YPosition;
             }
             else
             {
