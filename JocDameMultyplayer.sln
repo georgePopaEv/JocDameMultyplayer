@@ -5,13 +5,6 @@ VisualStudioVersion = 16.0.33529.622
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JocDameMultyplayer", "JocDameMultyplayer\JocDameMultyplayer.csproj", "{5313BA6F-E78A-4E76-8C53-6FF2C1E5D43C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{0572C651-4C47-40A4-AA10-962483772A52}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DE2240B9-1B41-4D73-ADE7-77C5FDD3421D} = {DE2240B9-1B41-4D73-ADE7-77C5FDD3421D}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibrariaMea", "LibrariaMea\LibrariaMea.csproj", "{DE2240B9-1B41-4D73-ADE7-77C5FDD3421D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerSide", "ServerSide\ServerSide.csproj", "{268EE2F4-82BE-486F-BD1B-A07F7131051D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Joc.Library", "Joc.Library\Joc.Library.csproj", "{926CC880-3FA4-4E45-ADD2-DEC20F2B08EF}"
@@ -26,14 +19,6 @@ Global
 		{5313BA6F-E78A-4E76-8C53-6FF2C1E5D43C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5313BA6F-E78A-4E76-8C53-6FF2C1E5D43C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5313BA6F-E78A-4E76-8C53-6FF2C1E5D43C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0572C651-4C47-40A4-AA10-962483772A52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0572C651-4C47-40A4-AA10-962483772A52}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0572C651-4C47-40A4-AA10-962483772A52}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0572C651-4C47-40A4-AA10-962483772A52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE2240B9-1B41-4D73-ADE7-77C5FDD3421D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE2240B9-1B41-4D73-ADE7-77C5FDD3421D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE2240B9-1B41-4D73-ADE7-77C5FDD3421D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE2240B9-1B41-4D73-ADE7-77C5FDD3421D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{268EE2F4-82BE-486F-BD1B-A07F7131051D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{268EE2F4-82BE-486F-BD1B-A07F7131051D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{268EE2F4-82BE-486F-BD1B-A07F7131051D}.Release|Any CPU.ActiveCfg = Release|Any CPU

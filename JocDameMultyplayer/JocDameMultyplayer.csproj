@@ -29,9 +29,6 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibrariaMea\LibrariaMea.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="Lidgren.Network">
       <HintPath>..\..\..\Games Created\TDS\TDS\bin\Debug\netcoreapp3.1\Lidgren.Network.dll</HintPath>
     </Reference>
