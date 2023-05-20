@@ -13,15 +13,15 @@ namespace ServerSide.Commands
 {
     class InputCommand : ICommand
     {
-        public void Run(NetServer server, NetIncomingMessage inc, PlayerDetails player, List<PlayerDetails> players)
+        public void Run(ManagerLogger managerLorgger, NetServer server, NetIncomingMessage inc, PlayerDetails player, List<PlayerDetails> players)
         {
-            Console.WriteLine("Received new Input");
+            managerLorgger.AddLogMessage("server", "Received new Input");
             var name = inc.ReadString();                  // primeste numele clientului
             var key = (Keys)inc.ReadByte();           //se citeste keya apasata de catre client
             player = players.FirstOrDefault(p => p.Name == name);
             if (player == null)
             {
-                Console.WriteLine("NU am gasit player cu acest nume{0}", name);
+                managerLorgger.AddLogMessage("server", string.Format("NU am gasit player cu acest nume{0}", name));
                 return;
             }
             int x = 0;
@@ -55,7 +55,7 @@ namespace ServerSide.Commands
                 player.YPosition += y;
             }
             var command = new PlayerPositionCommand();
-            command.Run(server, inc, player, players);
+            command.Run(managerLorgger, server, inc, player, players);
         }
     }
 }

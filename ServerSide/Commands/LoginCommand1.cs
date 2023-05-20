@@ -1,5 +1,6 @@
 ﻿using Joc.Library;
 using Lidgren.Network;
+using ServerSide.Manager;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,13 +10,14 @@ namespace ServerSide.Commands
 {
     class LoginCommand1 : ICommand
     {
-        public void Run(NetServer server, NetIncomingMessage incmesage, PlayerDetails player, List<PlayerDetails> players)
+        public void Run(ManagerLogger managerLorgger, NetServer server, NetIncomingMessage incmesage, PlayerDetails player, List<PlayerDetails> players)
         {
-            Console.WriteLine("Client Connectat: " + incmesage.SenderConnection.RemoteEndPoint);
+            
+            managerLorgger.AddLogMessage("server", "Client Connectat: " + incmesage.SenderConnection.RemoteEndPoint);
             var data = incmesage.ReadByte();
             if (data == (byte)PacketType.Login)
             {
-                Console.WriteLine("..connection accepted");
+                managerLorgger.AddLogMessage("server", "..connection accepted");
                 player = CreatePlayer(incmesage, players); // Se creaza un nou player si se adauga in lista de playeri pe baza a ce trimite la conectare clientul(daca el vrea sa fie pe o anumita pozitie sa trimita date pentru o anumita pozitie)
                 incmesage.SenderConnection.Approve();  //Dam approve pentru Conexiune
                 var outmsg = server.CreateMessage();    //Serverul creaza un mesaj  // Mai cream un mesaj 
@@ -29,7 +31,7 @@ namespace ServerSide.Commands
                 }
                 server.SendMessage(outmsg, incmesage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0); //Trimiterea mesajului catre client si prelucrarea acestuia in Establish                                
                 var command = new PlayerPositionCommand();
-                command.Run(server, incmesage, player, players);
+                command.Run(managerLorgger, server, incmesage, player, players);
                 
 
                 //SendFullPlayerList();

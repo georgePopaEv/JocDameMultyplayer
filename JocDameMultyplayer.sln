@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerSide", "ServerSide\Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Joc.Library", "Joc.Library\Joc.Library.csproj", "{926CC880-3FA4-4E45-ADD2-DEC20F2B08EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientGui", "ClientGui\ClientGui.csproj", "{7D945D28-5A1F-4F08-8E83-E8F99BD8D60D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{926CC880-3FA4-4E45-ADD2-DEC20F2B08EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{926CC880-3FA4-4E45-ADD2-DEC20F2B08EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{926CC880-3FA4-4E45-ADD2-DEC20F2B08EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D945D28-5A1F-4F08-8E83-E8F99BD8D60D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D945D28-5A1F-4F08-8E83-E8F99BD8D60D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D945D28-5A1F-4F08-8E83-E8F99BD8D60D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D945D28-5A1F-4F08-8E83-E8F99BD8D60D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
-using LibrariaMea;
+using Joc.Library;
 using Lidgren.Network;
 using Microsoft.Xna.Framework.Input;
 
 namespace JocDameMultyplayer
 {
-    class Client
+    public class Client
     {
         private NetClient _client;
         public List<PlayerDetails> Player { get; set; }
@@ -26,9 +26,7 @@ namespace JocDameMultyplayer
             var random = new Random();
             _client = new NetClient(new NetPeerConfiguration("JocDeDame")); //se creaza client-ul connectat la server
             _client.Start();  // se porneste clientul
-
-            Username = "name_" + random.Next(0, 100); // Se creaza un player cu numele x
-
+            //Username = "name_" + random.Next(0, 100); // Se creaza un player cu numele x
             var outmsg = _client.CreateMessage();   //se creaza un mesaj din partea clientului
             outmsg.Write((byte)PacketType.Login);   //se scrie in mesaj ce tip de packet de doreste, iar in acest caz este un packet de type Login
             outmsg.Write(Username); 
@@ -149,7 +147,6 @@ namespace JocDameMultyplayer
             outmessage.Write(Username);    // ii transmitem serverului numele nostru de client
             outmessage.Write((byte)key);            // Atasam si key-ia apasata de client 
             _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
-
         }
     }
 }

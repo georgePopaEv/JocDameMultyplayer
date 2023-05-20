@@ -1,6 +1,7 @@
 ﻿using Joc.Library;
 using Lidgren.Network;
 using ServerSide.Commands;
+using ServerSide.Manager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,14 @@ namespace ServerSide
 {
     class Server
     {
+        private ManagerLogger _managerLogger;
         private List<PlayerDetails> _players;
         private NetPeerConfiguration _config;
         private NetServer _server;
 
-        public Server()
+        public Server(ManagerLogger managerLogger)
         {
+            _managerLogger = managerLogger;
             _players = new List<PlayerDetails>();
             _config = new NetPeerConfiguration("JocDeDame") { Port = 14242 };
             _config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
@@ -27,6 +30,7 @@ namespace ServerSide
         {
             _server.Start();
             Console.WriteLine("Serverul a pornit");
+            _managerLogger.AddLogMessage("Server", "Server Started");
 
             while (true)
             {
@@ -42,18 +46,19 @@ namespace ServerSide
                     {
                         case NetIncomingMessageType.ConnectionApproval:
                             var login = new LoginCommand1();
-                            login.Run(_server, incmesage, null, _players);
+                            login.Run(_managerLogger, _server, incmesage, null, _players);
                             break;
                         case NetIncomingMessageType.Data:
                             //Se va dezvolta logica pentru mesajele de tip data (informatii legate de player)
                             Data(incmesage);
-                            Console.WriteLine("Mesaj primit de la Client" + incmesage.ReadString());
+                            _managerLogger.AddLogMessage("server", "Mesaj primit de la Client" + incmesage.ReadString());
                             break;
                         case NetIncomingMessageType.StatusChanged:
                             var status = (NetConnectionStatus)incmesage.ReadByte();
-                            Console.WriteLine("Status Conexiune Schimbata " + status.ToString() + " (" + incmesage.ReadString() + ") " + incmesage.ToString());
+                            _managerLogger.AddLogMessage("server", "Status Conexiune Schimbata " + status.ToString() + " (" + incmesage.ReadString() + ") " + incmesage.ToString());
                             break;
                         default:
+                            _managerLogger.AddLogMessage("server", "Mesaj necunoscut de la client: " + incmesage.MessageType);
                             Console.WriteLine("Mesaj necunoscut de la client: " + incmesage.MessageType);
                             break;
                     }
@@ -62,11 +67,17 @@ namespace ServerSide
             }
         }
 
+        public void Stop()
+        {
+            _managerLogger.AddLogMessage("Server", "Server Se opreste");
+            _server.Shutdown("Serverul se opreste");
+        }
+
         private void Data(NetIncomingMessage incmesage)
 {
 var packetType = (PacketType)incmesage.ReadByte();   // primeste de la client tipul de mesaj pe care vrea sa-l analizeze serverul
             var command = CommandFactory.GetCommand(packetType);
-            command.Run(_server, incmesage, null, _players);
+            command.Run(_managerLogger,_server, incmesage, null, _players);
 
         }
     }

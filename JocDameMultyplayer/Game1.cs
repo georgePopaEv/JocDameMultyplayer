@@ -10,7 +10,7 @@ namespace JocDameMultyplayer
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Client client1;
+        public Client client1{get; set;}
         private ManagerInput _managerInput;
         private Texture2D _texture;
         private Texture2D _textureKingRed;

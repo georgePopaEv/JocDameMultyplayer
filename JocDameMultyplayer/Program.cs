@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using System;
+using System.Windows.Forms;
 
 namespace JocDameMultyplayer
 {
@@ -8,8 +10,7 @@ namespace JocDameMultyplayer
         static void Main()
         {
             
-            using (var game = new Game1())
-                game.Run();
+
         }
     }
 }
