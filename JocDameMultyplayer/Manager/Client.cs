@@ -82,24 +82,43 @@ namespace JocDameMultyplayer
             NetIncomingMessage incmessage;
             while ((incmessage = _client.ReadMessage()) != null)
             {
-                if (incmessage.MessageType != NetIncomingMessageType.Data) continue;
-                var packageType = (PacketType)incmessage.ReadByte(); //se citeste ce fel de packet este
-                switch (packageType)
+                switch (incmessage.MessageType)
                 {
-                    case PacketType.PlayerPosition:
-                        ReadPlayer(incmessage);
+                    case NetIncomingMessageType.Data:
+                        Data(incmessage);
                         break;
+                    case NetIncomingMessageType.StatusChanged:
+                        switch ((NetConnectionStatus)incmessage.ReadByte())
+                        {
+                            case NetConnectionStatus.Disconnected:
+                                Active = false;
+                                break;
 
-                    case PacketType.AllPlayers:
-                        ReceiveAllPlayers(incmessage);
+                        }
                         break;
-
-                    case PacketType.Kick:
-                        ReceiveKick(incmessage);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
+                
+                
+            }
+        }
+        private void Data(NetIncomingMessage incmessage)
+        {
+            var packageType = (PacketType)incmessage.ReadByte(); //se citeste ce fel de packet este
+            switch (packageType)
+            {
+                case PacketType.PlayerPosition:
+                    ReadPlayer(incmessage);
+                    break;
+
+                case PacketType.AllPlayers:
+                    ReceiveAllPlayers(incmessage);
+                    break;
+
+                case PacketType.Kick:
+                    ReceiveKick(incmessage);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

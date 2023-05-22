@@ -13,13 +13,14 @@ namespace ServerSide.Commands
 {
     class InputCommand : ICommand
     {
-        public void Run(ManagerLogger managerLorgger, Server server, NetIncomingMessage inc, PlayerDetails player, List<PlayerDetails> players)
+        public void Run(ManagerLogger managerLorgger, Server server, NetIncomingMessage inc, PlayerAndConnection playerAndConnection, List<PlayerAndConnection> players = null)
         {
             managerLorgger.AddLogMessage("server", "Received new Input");
             var name = inc.ReadString();                  // primeste numele clientului
             var key = (Keys)inc.ReadByte();           //se citeste keya apasata de catre client
-            player = players.FirstOrDefault(p => p.Name == name);
-            if (player == null)
+            
+            playerAndConnection = players.FirstOrDefault(p => p.PlayerDetails.Name == name);
+            if (playerAndConnection == null)
             {
                 managerLorgger.AddLogMessage("server", string.Format("NU am gasit player cu acest nume{0}", name));
                 return;
@@ -48,14 +49,14 @@ namespace ServerSide.Commands
                 default:
                     break;
             }
-
-            if (!ManagerCollision.CheckCollision(new Rectangle(player.XPosition + x, player.YPosition + y, 50, 50), player.Name, players))
+            var player = playerAndConnection.PlayerDetails;
+            if (!ManagerCollision.CheckCollision(new Rectangle(player.XPosition + x, player.YPosition + y, 50, 50), player.Name, players.Select(p => p.PlayerDetails).ToList()))
             {
                 player.XPosition += x;
                 player.YPosition += y;
             }
             var command = new PlayerPositionCommand();
-            command.Run(managerLorgger, server, inc, player, players);
+            command.Run(managerLorgger, server, inc, playerAndConnection, players);
         }
     }
 }

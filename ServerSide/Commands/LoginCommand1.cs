@@ -10,7 +10,7 @@ namespace ServerSide.Commands
 {
     class LoginCommand1 : ICommand
     {
-        public void Run(ManagerLogger managerLorgger, Server server, NetIncomingMessage incmesage, PlayerDetails player, List<PlayerDetails> players)
+        public void Run(ManagerLogger managerLorgger, Server server, NetIncomingMessage incmesage, PlayerAndConnection playerAndConnection, List<PlayerAndConnection> players = null)
         {
             
             managerLorgger.AddLogMessage("server", "Client Connectat: " + incmesage.SenderConnection.RemoteEndPoint);
@@ -18,7 +18,7 @@ namespace ServerSide.Commands
             if (data == (byte)PacketType.Login)
             {
                 managerLorgger.AddLogMessage("server", "..connection accepted");
-                player = CreatePlayer(incmesage, players); // Se creaza un nou player si se adauga in lista de playeri pe baza a ce trimite la conectare clientul(daca el vrea sa fie pe o anumita pozitie sa trimita date pentru o anumita pozitie)
+                playerAndConnection = CreatePlayer(incmesage, players); // Se creaza un nou player si se adauga in lista de playeri pe baza a ce trimite la conectare clientul(daca el vrea sa fie pe o anumita pozitie sa trimita date pentru o anumita pozitie)
                 incmesage.SenderConnection.Approve();  //Dam approve pentru Conexiune
                 var outmsg = server.NetServer.CreateMessage();    //Serverul creaza un mesaj  // Mai cream un mesaj 
                 outmsg.Write((byte)PacketType.Login);   // Adauga in mesaj bite-ul pentru Login (faptul ca este mesaj de tip login)
@@ -27,12 +27,12 @@ namespace ServerSide.Commands
                 Thread.Sleep(500);      // O pauza mica pentru Server de juma de secunda
                 for (int n = 0; n < players.Count; n++)
                 {
-                    outmsg.WriteAllProperties(players[n]);
+                    outmsg.WriteAllProperties(players[n].PlayerDetails);
                 }
                 server.NetServer.SendMessage(outmsg, incmesage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0); //Trimiterea mesajului catre client si prelucrarea acestuia in Establish                                
                 var command = new PlayerPositionCommand();
-                command.Run(managerLorgger, server, incmesage, player, players);
-                server.SendNewPlayerEvent(username: player.Name);
+                command.Run(managerLorgger, server, incmesage, playerAndConnection, players);
+                server.SendNewPlayerEvent(playerAndConnection.PlayerDetails.Name);
 
 
 
@@ -45,7 +45,7 @@ namespace ServerSide.Commands
             }
         }
 
-        private PlayerDetails CreatePlayer(NetIncomingMessage incmesage, List<PlayerDetails> players)
+        private PlayerAndConnection CreatePlayer(NetIncomingMessage incmesage, List<PlayerAndConnection> players)
         {
             var random = new Random();
             var player = new PlayerDetails // se construieste player-ul  //se creaza un nou player pentru ca s-a primit o noua cerere de conectare->prin urmare este un alt player
@@ -56,10 +56,11 @@ namespace ServerSide.Commands
                 YPosition = random.Next(0, 420)      //un y random 
             };
             //se adauga in lista noastra de playeri de care se ocupa serverul
-            players.Add(player);
+            var playerAndConnection = new PlayerAndConnection(player, incmesage.SenderConnection);
+            players.Add(playerAndConnection);
 
 
-            return player;
+            return playerAndConnection;
         }
     }
 }

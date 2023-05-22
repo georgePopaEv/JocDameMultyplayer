@@ -15,14 +15,14 @@ namespace ServerSide
     {
         public event EventHandler<NewPLayerEventArgs> NewPlayer;
         private ManagerLogger _managerLogger;
-        private List<PlayerDetails> _players;
+        private List<PlayerAndConnection> _players;
         private NetPeerConfiguration _config;
         public NetServer NetServer { get;  private set;}
 
         public Server(ManagerLogger managerLogger)
         {
             _managerLogger = managerLogger;
-            _players = new List<PlayerDetails>();
+            _players = new List<PlayerAndConnection>();
             _config = new NetPeerConfiguration("JocDeDame") { Port = 14242 };
             _config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             NetServer = new NetServer(_config);

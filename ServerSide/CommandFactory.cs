@@ -23,6 +23,9 @@ namespace ServerSide
                 case PacketType.Input:
                     return new InputCommand();
                     break;
+                case PacketType.Kick:
+                    return new KickPlayerCommand();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException("packettType");
                     break;

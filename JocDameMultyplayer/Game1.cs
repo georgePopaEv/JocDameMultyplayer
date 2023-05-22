@@ -35,14 +35,7 @@ namespace JocDameMultyplayer
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            if (client1.Start())
-            {
-                _color = Color.Green;
-            }
-            else
-            {
-                _color = Color.Red;
-            }
+            client1.Start();
             base.Initialize();
             _texture = Content.Load<Texture2D>("checkerBlack");
             _textureKingRed = Content.Load<Texture2D>("checkerKingRed");
@@ -80,7 +73,7 @@ namespace JocDameMultyplayer
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(_color);
+            GraphicsDevice.Clear(client1.Active ? Color.Green : Color.Red);
 
             _spriteBatch.Begin();
             if (client1.Active)
