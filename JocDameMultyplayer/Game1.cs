@@ -85,7 +85,7 @@ namespace JocDameMultyplayer
             _spriteBatch.Begin();
             if (client1.Active)
             {
-                foreach (var otherplayer in client1.Player)
+                foreach (var otherplayer in client1.Players)
                 {
                     if(otherplayer.Name == client1.Username)
                     {

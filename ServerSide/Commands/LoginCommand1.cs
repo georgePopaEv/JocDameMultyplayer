@@ -10,7 +10,7 @@ namespace ServerSide.Commands
 {
     class LoginCommand1 : ICommand
     {
-        public void Run(ManagerLogger managerLorgger, NetServer server, NetIncomingMessage incmesage, PlayerDetails player, List<PlayerDetails> players)
+        public void Run(ManagerLogger managerLorgger, Server server, NetIncomingMessage incmesage, PlayerDetails player, List<PlayerDetails> players)
         {
             
             managerLorgger.AddLogMessage("server", "Client Connectat: " + incmesage.SenderConnection.RemoteEndPoint);
@@ -20,7 +20,7 @@ namespace ServerSide.Commands
                 managerLorgger.AddLogMessage("server", "..connection accepted");
                 player = CreatePlayer(incmesage, players); // Se creaza un nou player si se adauga in lista de playeri pe baza a ce trimite la conectare clientul(daca el vrea sa fie pe o anumita pozitie sa trimita date pentru o anumita pozitie)
                 incmesage.SenderConnection.Approve();  //Dam approve pentru Conexiune
-                var outmsg = server.CreateMessage();    //Serverul creaza un mesaj  // Mai cream un mesaj 
+                var outmsg = server.NetServer.CreateMessage();    //Serverul creaza un mesaj  // Mai cream un mesaj 
                 outmsg.Write((byte)PacketType.Login);   // Adauga in mesaj bite-ul pentru Login (faptul ca este mesaj de tip login)
                 outmsg.Write(true);                     //Acceptul pentru Client
                 outmsg.Write(players.Count);
@@ -29,10 +29,12 @@ namespace ServerSide.Commands
                 {
                     outmsg.WriteAllProperties(players[n]);
                 }
-                server.SendMessage(outmsg, incmesage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0); //Trimiterea mesajului catre client si prelucrarea acestuia in Establish                                
+                server.NetServer.SendMessage(outmsg, incmesage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0); //Trimiterea mesajului catre client si prelucrarea acestuia in Establish                                
                 var command = new PlayerPositionCommand();
                 command.Run(managerLorgger, server, incmesage, player, players);
-                
+                server.SendNewPlayerEvent(username: player.Name);
+
+
 
                 //SendFullPlayerList();
                 //SendNewPlayer(player, incmesage);   // se trimite inapoi mesaj ca este un nou player adaugat in server , se va trata in client folder 

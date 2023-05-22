@@ -13,7 +13,7 @@ namespace ServerSide.Commands
 {
     class InputCommand : ICommand
     {
-        public void Run(ManagerLogger managerLorgger, NetServer server, NetIncomingMessage inc, PlayerDetails player, List<PlayerDetails> players)
+        public void Run(ManagerLogger managerLorgger, Server server, NetIncomingMessage inc, PlayerDetails player, List<PlayerDetails> players)
         {
             managerLorgger.AddLogMessage("server", "Received new Input");
             var name = inc.ReadString();                  // primeste numele clientului

@@ -9,6 +9,6 @@ namespace ServerSide.Commands
 {
     interface ICommand
     {
-        void Run(ManagerLogger managerLorgger, NetServer server, NetIncomingMessage inc, PlayerDetails player, List<PlayerDetails> players);
+        void Run(ManagerLogger managerLorgger, Server server, NetIncomingMessage inc, PlayerDetails player, List<PlayerDetails> players);
     }
 }

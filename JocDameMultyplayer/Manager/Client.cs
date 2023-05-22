@@ -12,13 +12,13 @@ namespace JocDameMultyplayer
     public class Client
     {
         private NetClient _client;
-        public List<PlayerDetails> Player { get; set; }
+        public List<PlayerDetails> Players { get; set; }
         public string Username { get; set; }
         public bool Active { get; set; }
 
         public Client()
         {
-            Player = new List<PlayerDetails>();
+            Players = new List<PlayerDetails>();
         }
 
         public bool Start()
@@ -93,42 +93,62 @@ namespace JocDameMultyplayer
                     case PacketType.AllPlayers:
                         ReceiveAllPlayers(incmessage);
                         break;
+
+                    case PacketType.Kick:
+                        ReceiveKick(incmessage);
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
         }
 
-/*        private void ReceivePlayerPosition(NetIncomingMessage incmessage)
+        /*        private void ReceivePlayerPosition(NetIncomingMessage incmessage)
+                {
+                    var player = new PlayerDetails();  // se creaza un player default
+                    incmessage.ReadAllProperties(player);
+                    if (Player.Any(p => p.Name == player.Name))
+                    {
+                        var oldplayer = Player.FirstOrDefault(p => p.Name == player.Name);
+                        oldplayer.XPosiion = player.XPosiion;
+                        oldplayer.YPosiion = player.YPosiion;
+                    }
+                    else
+                    {
+                        Player.Add(player);
+                    }
+
+                }*/
+        private void ReceiveKick(NetIncomingMessage inc)
         {
-            var player = new PlayerDetails();  // se creaza un player default
-            incmessage.ReadAllProperties(player);
-            if (Player.Any(p => p.Name == player.Name))
+            var username = inc.ReadString();
+            var player = Players.FirstOrDefault(p => p.Name == username);
+            if (player != null)
             {
-                var oldplayer = Player.FirstOrDefault(p => p.Name == player.Name);
-                oldplayer.XPosiion = player.XPosiion;
-                oldplayer.YPosiion = player.YPosiion;
+                Players.Remove(player);
             }
-            else
+            if (username == Username)
             {
-                Player.Add(player);
+                _client.Disconnect("kick");
             }
             
-        }*/
+            
+
+        }
 
         private void ReadPlayer(NetIncomingMessage inc)
         {
             var player = new PlayerDetails();
             inc.ReadAllProperties(player);
-            if (Player.Any(p => p.Name == player.Name))
+            if (Players.Any(p => p.Name == player.Name))
             {
-                var oldplayer = Player.FirstOrDefault(p => p.Name == player.Name);
+                var oldplayer = Players.FirstOrDefault(p => p.Name == player.Name);
                 oldplayer.XPosition = player.XPosition;
                 oldplayer.YPosition = player.YPosition;
             }
             else
             {
-                Player.Add(player);
+                Players.Add(player);
             }
         }
         private void ReceiveAllPlayers(NetIncomingMessage message)

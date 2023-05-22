@@ -2,6 +2,7 @@
 using Lidgren.Network;
 using ServerSide.Commands;
 using ServerSide.Manager;
+using ServerSide.MyEventArgs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,11 @@ namespace ServerSide
 {
     class Server
     {
+        public event EventHandler<NewPLayerEventArgs> NewPlayer;
         private ManagerLogger _managerLogger;
         private List<PlayerDetails> _players;
         private NetPeerConfiguration _config;
-        private NetServer _server;
+        public NetServer NetServer { get;  private set;}
 
         public Server(ManagerLogger managerLogger)
         {
@@ -23,12 +25,12 @@ namespace ServerSide
             _players = new List<PlayerDetails>();
             _config = new NetPeerConfiguration("JocDeDame") { Port = 14242 };
             _config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
-            _server = new NetServer(_config);
+            NetServer = new NetServer(_config);
         }
 
         public void Run()
         {
-            _server.Start();
+            NetServer.Start();
             Console.WriteLine("Serverul a pornit");
             _managerLogger.AddLogMessage("Server", "Server Started");
 
@@ -40,13 +42,13 @@ namespace ServerSide
                 /*
                 Console.WriteLine("While Loop: inainte de  verificare mesaj" + s );
                 s++;*/
-                while ((incmesage = _server.ReadMessage()) != null)
+                while ((incmesage = NetServer.ReadMessage()) != null)
                 {
                     switch (incmesage.MessageType)
                     {
                         case NetIncomingMessageType.ConnectionApproval:
                             var login = new LoginCommand1();
-                            login.Run(_managerLogger, _server, incmesage, null, _players);
+                            login.Run(_managerLogger, this, incmesage, null, _players);
                             break;
                         case NetIncomingMessageType.Data:
                             //Se va dezvolta logica pentru mesajele de tip data (informatii legate de player)
@@ -70,15 +72,29 @@ namespace ServerSide
         public void Stop()
         {
             _managerLogger.AddLogMessage("Server", "Server Se opreste");
-            _server.Shutdown("Serverul se opreste");
+            NetServer.Shutdown("Serverul se opreste");
         }
 
         private void Data(NetIncomingMessage incmesage)
-{
-var packetType = (PacketType)incmesage.ReadByte();   // primeste de la client tipul de mesaj pe care vrea sa-l analizeze serverul
+        {
+            var packetType = (PacketType)incmesage.ReadByte();   // primeste de la client tipul de mesaj pe care vrea sa-l analizeze serverul
             var command = CommandFactory.GetCommand(packetType);
-            command.Run(_managerLogger,_server, incmesage, null, _players);
+            command.Run(_managerLogger, this, incmesage, null, _players);
 
+        }
+
+        
+
+        public void SendNewPlayerEvent(string username)
+        {
+            if (NewPlayer != null)
+                NewPlayer(this, new NewPLayerEventArgs(username));
+        }
+
+        public void KickPlayer(int playerIndex)
+        {
+            var command = CommandFactory.GetCommand(PacketType.Kick);
+            command.Run(_managerLogger, this, null, _players[playerIndex], _players);
         }
     }
 }

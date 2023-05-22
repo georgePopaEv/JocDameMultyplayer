@@ -3,5 +3,6 @@
     Login,
     PlayerPosition,
     AllPlayers,
-    Input
+    Input,
+    Kick
 }

@@ -28,9 +28,22 @@ namespace ServerSide.Forms
              * și va primi ca argumente obiectul sender (în cazul de față _managerLogger) și un obiect LogMessageEventArgs 
              * care conține mesajul de log. Acest handler poate efectua acțiuni specifice cu mesajul de log, cum ar fi afișarea 
              * lui în interfața utilizatorului sau stocarea*/
+            
             _server = new Server(_managerLogger);     //se atribuie o instanta de tip Server
+            _server.NewPlayer += NewPlayerEvent;
             InitializeComponent();      
             
+        }
+
+        private void NewPlayerEvent(object sender, NewPLayerEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new EventHandler<NewPLayerEventArgs>(NewPlayerEvent), sender, e);
+                return;
+            }
+
+            lstPLayers.Items.Add(e.Username);
         }
 
         private void NewLogMessageEvent(object sender, MyEventArgs.LogMessageEventArgs e)
@@ -65,5 +78,19 @@ namespace ServerSide.Forms
             }
             
         }
+
+        #region Context Menu Players
+        private void cmnPLayersKick_Click(object sender, EventArgs e)
+        {
+            if(lstPLayers.SelectedIndex == -1)
+            {
+                MessageBox.Show("Select a player first");
+                return;
+            }
+            _server.KickPlayer(lstPLayers.SelectedIndex);
+            lstPLayers.Items.RemoveAt(lstPLayers.SelectedIndex);
+        }
+
+        #endregion
     }
 }
