@@ -15,10 +15,11 @@ namespace JocDameMultyplayer
         public List<PlayerDetails> Players { get; set; }
         public string Username { get; set; }
         public bool Active { get; set; }
-
+        public Board Board;
         public Client()
         {
             Players = new List<PlayerDetails>();
+            Board = new Board();
         }
 
         public bool Start()
@@ -122,22 +123,6 @@ namespace JocDameMultyplayer
             }
         }
 
-        /*        private void ReceivePlayerPosition(NetIncomingMessage incmessage)
-                {
-                    var player = new PlayerDetails();  // se creaza un player default
-                    incmessage.ReadAllProperties(player);
-                    if (Player.Any(p => p.Name == player.Name))
-                    {
-                        var oldplayer = Player.FirstOrDefault(p => p.Name == player.Name);
-                        oldplayer.XPosiion = player.XPosiion;
-                        oldplayer.YPosiion = player.YPosiion;
-                    }
-                    else
-                    {
-                        Player.Add(player);
-                    }
-
-                }*/
         private void ReceiveKick(NetIncomingMessage inc)
         {
             var username = inc.ReadString();
