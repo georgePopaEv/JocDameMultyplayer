@@ -23,6 +23,7 @@ namespace ClientGui
         {
             var game = new Game1();
             game.client1.Username = textBox1.Text.ToString();
+            textBox2.Text = game.
             game.Run();
             
         }

@@ -4,5 +4,6 @@
     PlayerPosition,
     AllPlayers,
     Input,
-    Kick
+    Kick,
+    ClickPos
 }

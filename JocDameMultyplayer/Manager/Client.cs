@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using Joc.Library;
@@ -14,6 +15,7 @@ namespace JocDameMultyplayer
         private NetClient _client;
         public List<PlayerDetails> Players { get; set; }
         public string Username { get; set; }
+        public Color color;
         public bool Active { get; set; }
         public Board Board;
         public Client()
@@ -171,6 +173,19 @@ namespace JocDameMultyplayer
             outmessage.Write(Username);    // ii transmitem serverului numele nostru de client
             outmessage.Write((byte)key);            // Atasam si key-ia apasata de client 
             _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendClickPosition(int row, int col)
+        {
+            var outmessage = _client.CreateMessage();
+            outmessage.Write((byte)PacketType.ClickPos);
+            outmessage.Write(Username);
+            outmessage.Write(row);
+            outmessage.Write(col);
+            
+
+            throw new NotImplementedException();
+
         }
     }
 }
