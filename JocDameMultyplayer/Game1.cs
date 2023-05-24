@@ -1,4 +1,5 @@
-﻿using JocDameMultyplayer.Manager;
+﻿using Joc.Library;
+using JocDameMultyplayer.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -6,15 +7,19 @@ using System;
 
 namespace JocDameMultyplayer
 {
-    public class Game1 : Game
+
+    public class Game1 : Game 
     {
+        private Constants constants;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         public Client client1{get; set;}
         private ManagerInput _managerInput;
-        private Texture2D _texture;
-        private Texture2D _textureKingRed;
         private SpriteFont _font;
+        private Texture2D _textureCheckerRed;
+        private Texture2D _textureCheckerBlack;
+        private Texture2D _textureCheckerKingRed;
+        private Texture2D _textureCheckerKingBlack;
 
         private Color _color;
 
@@ -37,8 +42,10 @@ namespace JocDameMultyplayer
             // TODO: Add your initialization logic here
             client1.Start();
             base.Initialize();
-            _texture = Content.Load<Texture2D>("checkerBlack");
-            _textureKingRed = Content.Load<Texture2D>("checkerKingRed");
+            _textureCheckerBlack = Content.Load<Texture2D>("checkerBlack");
+            _textureCheckerRed = Content.Load<Texture2D>("checkerRed");
+            _textureCheckerKingBlack = Content.Load<Texture2D>("checkerBlackKing");
+            _textureCheckerKingRed = Content.Load<Texture2D>("checkerKingRed");
             _font = Content.Load<SpriteFont>("File");
             ///Se fac setarile pentru autosize
             Window.AllowUserResizing = true;
@@ -78,17 +85,44 @@ namespace JocDameMultyplayer
             _spriteBatch.Begin();
             if (client1.Active)
             {
+                for (int i = 0; i < constants.ROWS; i++)
+                {
+                    for (int j = 0; j < constants.COLS; j++)
+                    {
+                        object piec = client1.Board.board[i, j];
+                        if ( piec is Piece)
+                        {
+                            //if (((Piece)piec).color == constants.BLACK)
+                            {
+
+                            }
+
+                        }
+                    }
+                }
+                foreach( var item in client1.Board.board)
+                {
+                    if (item is Piece)
+                    {
+                        //if(item.color == RED)
+                        {
+
+                        }
+                    }
+                }
+
+
                 foreach (var otherplayer in client1.Players)
                 {
                     if(otherplayer.Name == client1.Username)
                     {
                         _spriteBatch.DrawString(_font, otherplayer.Name, new Vector2(otherplayer.XPosition, otherplayer.YPosition - 20), Color.Red);
-                        _spriteBatch.Draw(_textureKingRed, new Rectangle(otherplayer.XPosition, otherplayer.YPosition, 50, 50), Color.White);
+                        _spriteBatch.Draw(_textureCheckerKingRed, new Rectangle(otherplayer.XPosition, otherplayer.YPosition, 50, 50), Color.White);
                     }
                     else
                     {
                         _spriteBatch.DrawString(_font, otherplayer.Name, new Vector2(otherplayer.XPosition, otherplayer.YPosition - 20), Color.Black);
-                        _spriteBatch.Draw(_texture, new Rectangle(otherplayer.XPosition, otherplayer.YPosition, 50, 50), Color.White);
+                        _spriteBatch.Draw(_textureCheckerBlack, new Rectangle(otherplayer.XPosition, otherplayer.YPosition, 50, 50), Color.White);
                     }
                     
                 }

@@ -15,6 +15,7 @@ namespace JocDameMultyplayer
         public List<PlayerDetails> Players { get; set; }
         public string Username { get; set; }
         public bool Active { get; set; }
+        public Board Board;
 
         public Client()
         {
@@ -35,8 +36,6 @@ namespace JocDameMultyplayer
             return EstablishInfo();     //se returneaza True daca s-a reusit connectarea la server
 
         }
-
-        
 
         private bool EstablishInfo()
         {
@@ -122,22 +121,6 @@ namespace JocDameMultyplayer
             }
         }
 
-        /*        private void ReceivePlayerPosition(NetIncomingMessage incmessage)
-                {
-                    var player = new PlayerDetails();  // se creaza un player default
-                    incmessage.ReadAllProperties(player);
-                    if (Player.Any(p => p.Name == player.Name))
-                    {
-                        var oldplayer = Player.FirstOrDefault(p => p.Name == player.Name);
-                        oldplayer.XPosiion = player.XPosiion;
-                        oldplayer.YPosiion = player.YPosiion;
-                    }
-                    else
-                    {
-                        Player.Add(player);
-                    }
-
-                }*/
         private void ReceiveKick(NetIncomingMessage inc)
         {
             var username = inc.ReadString();
@@ -150,9 +133,6 @@ namespace JocDameMultyplayer
             {
                 _client.Disconnect("kick");
             }
-            
-            
-
         }
 
         private void ReadPlayer(NetIncomingMessage inc)
@@ -187,5 +167,10 @@ namespace JocDameMultyplayer
             outmessage.Write((byte)key);            // Atasam si key-ia apasata de client 
             _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
         }
+
+        ///TODO  De creat send Click position x si y a clicului iar server-ul va analiza posibilele mutari si le va
+        ///furniza inapoi clientului
+        ///Se va trimite un packet de tip move/Click cu numele care face aceasta mutare pentru a stii sa trimita inapoi aceluiasi 
+        ///player
     }
 }
