@@ -147,7 +147,7 @@ namespace ServerSide.Forms
             // cmnPLayersKick
             // 
             this.cmnPLayersKick.Name = "cmnPLayersKick";
-            this.cmnPLayersKick.Size = new System.Drawing.Size(210, 24);
+            this.cmnPLayersKick.Size = new System.Drawing.Size(105, 24);
             this.cmnPLayersKick.Text = "Kick";
             this.cmnPLayersKick.Click += new System.EventHandler(this.cmnPLayersKick_Click);
             // 

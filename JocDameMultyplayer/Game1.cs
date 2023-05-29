@@ -12,6 +12,7 @@ namespace JocDameMultyplayer
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         public Client client1{get; set;}
+        public Client _client { get; set;}
         private ManagerInput _managerInput;
         private Texture2D _textureKingRed;
         private Texture2D _textureKingBlack;
@@ -23,25 +24,27 @@ namespace JocDameMultyplayer
 
         private Color _color;
 
-        public Game1()
+        public Game1(Client client)
         {
             //Initializarea tuturor variabilelor noastre 
             _graphics = new GraphicsDeviceManager(this);
             
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            client1 = new Client(); // Se declara un nou client participant la joc
+            //client1 = new Client(); // Se declara un nou client participant la joc
+            _client = client;
             //_texture = Content.Load<Texture2D>();
             _color = Color.CornflowerBlue;
             _constants = new Constants();
-            _managerInput = new ManagerInput(client1);
+            //_managerInput = new ManagerInput(client1);
+            _managerInput = new ManagerInput(_client);
 
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            client1.Start();
+            //client1.Start();
             base.Initialize();
             _textureBlack = Content.Load<Texture2D>("checkerBlack");
             _textureRed = Content.Load<Texture2D>("checkerRed");
@@ -81,17 +84,20 @@ namespace JocDameMultyplayer
                 Exit();
 
             // TODO: Add your update logic here
-            client1.Update();
+            //client1.Update();
+            _client.Update();
             _managerInput.Update(gameTime.ElapsedGameTime.Milliseconds);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(client1.Active ? Color.Green : Color.Red);
+            //GraphicsDevice.Clear(client1.Active ? Color.Green : Color.Red);
+            GraphicsDevice.Clear(_client.Active ? Color.Green : Color.Red);
 
             _spriteBatch.Begin();
-            if (client1.Active)
+            //if (client1.Active)
+            if (_client.Active)
             {
                 GraphicsDevice.Clear(Color.Blue);
                 //Desenarea board-ului pe care clientul o primeste de la server updatata
@@ -110,7 +116,10 @@ namespace JocDameMultyplayer
                 {
                     for (int j = 0; j < _constants.COLS; j++)
                     {
-                        object obj = client1.Board.board[i, j];
+                        //object obj = client1.Board.board[i, j];
+
+                        object obj = _client.board.board[i, j];
+                        //  object obj = _client.Players;
                         if (obj is Piece)
                         {
                             Piece piece = (Piece)obj;
@@ -119,7 +128,7 @@ namespace JocDameMultyplayer
                                 // _textureRed    _textureBlack                                
                                 if (piece.king)
                                 {
-                                    _spriteBatch.Draw(_textureKingBlack, new Rectangle(piece.posX - _textureKingBlack.Width, piece.posY - _textureKingBlack.Height, _constants.SQUARE_SIZE - 2, _constants.SQUARE_SIZE - 2), Color.Red);
+                                    _spriteBatch.Draw(_textureKingBlack, new Rectangle(piece.posX - _constants.SQUARE_SIZE / 2, piece.posY - _constants.SQUARE_SIZE / 2, _constants.SQUARE_SIZE - 2, _constants.SQUARE_SIZE - 2), Color.Red);
                                     // _textureKingBlack   _textureKingRed
                                 }
                                 else
@@ -131,7 +140,7 @@ namespace JocDameMultyplayer
                             {
                                 if (piece.king)
                                 {
-                                    _spriteBatch.Draw(_textureKingRed, new Rectangle(piece.posX - _textureKingRed.Width, piece.posY - _textureKingRed.Height, _constants.SQUARE_SIZE - 2, _constants.SQUARE_SIZE - 2), Color.Red);
+                                    _spriteBatch.Draw(_textureKingRed, new Rectangle(piece.posX - _constants.SQUARE_SIZE / 2, piece.posY - _constants.SQUARE_SIZE / 2, _constants.SQUARE_SIZE - 2, _constants.SQUARE_SIZE - 2), Color.Red);
                                     // _textureKingBlack   _textureKingRed
                                 }
                                 else
@@ -142,9 +151,19 @@ namespace JocDameMultyplayer
                         }
                     }
                 }
-                foreach (var otherplayer in client1.Players)
+
+                if(_client.validMoves.Count != 0)
                 {
-                    if(otherplayer.Name == client1.Username)
+                    foreach (var item in _client.validMoves)
+                    {
+                        _spriteBatch.Draw(_textureKingRed, new Rectangle(item.Item2 * 100, item.Item1 * 100, 100, 100), Color.White);
+                    }
+                }
+                //foreach (var otherplayer in client1.Players)
+                foreach (var otherplayer in _client.Players)
+                {
+                    //if(otherplayer.Name == client1.Username)
+                    if(otherplayer.Name == _client.Username)
                     {
                         _spriteBatch.DrawString(_font, otherplayer.Name, new Vector2(otherplayer.XPosition, otherplayer.YPosition - 20), Color.Red);
                         _spriteBatch.Draw(_textureKingRed, new Rectangle(otherplayer.XPosition, otherplayer.YPosition, 50, 50), Color.White);

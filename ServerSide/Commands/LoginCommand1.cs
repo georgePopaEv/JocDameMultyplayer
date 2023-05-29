@@ -1,5 +1,6 @@
 ﻿using Joc.Library;
 using Lidgren.Network;
+using Newtonsoft.Json;
 using ServerSide.Manager;
 using System;
 using System.Collections.Generic;
@@ -29,9 +30,29 @@ namespace ServerSide.Commands
                 {
                     outmsg.WriteAllProperties(players[n].PlayerDetails);
                 }
+
+
+                managerLorgger.AddLogMessage("server", "TRIMITEM prima mapa");
+
+                for (int i = 0; i < server.Board.ROWS; i++)
+                {
+                    for (int j = 0; j < server.Board.COLS; j++)
+                    {
+                        string serializeditem = JsonConvert.SerializeObject(server.Board.board[i,j]);
+                        Console.WriteLine(serializeditem);
+                        outmsg.Write(serializeditem);
+                    }
+
+                }
+                //string serializedBoard = JsonConvert.SerializeObject(server.Board.board);
+
+
+
                 server.NetServer.SendMessage(outmsg, incmesage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0); //Trimiterea mesajului catre client si prelucrarea acestuia in Establish                                
                 var command = new PlayerPositionCommand();
                 command.Run(managerLorgger, server, incmesage, playerAndConnection, players);
+                
+                
                 server.SendNewPlayerEvent(playerAndConnection.PlayerDetails.Name);
 
 

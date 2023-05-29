@@ -11,20 +11,24 @@ using System.Windows.Forms;
 
 namespace ClientGui
 {
-    public partial class Form1 : Form
+    public partial class LogInForm : Form
     {
-        public Form1()
+        public Client client1 { get; set; }
+        public LogInForm()
         {
+            client1 = new Client(); // Se declara un nou client participant la joc
             InitializeComponent();
             
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var game = new Game1();
-            game.client1.Username = textBox1.Text.ToString();
-            textBox2.Text = game.
-            game.Run();
+            client1.Username = textBox1.Text.ToString();
+            client1.Start();
+            MessageBox.Show(client1.serializedBoard.ToString());
+            LobbyForm f2 = new LobbyForm(client1);
+            f2.Show();
+            this.Visible = false;
             
         }
     }

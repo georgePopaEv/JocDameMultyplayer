@@ -20,7 +20,7 @@ namespace Joc.Library
         public Constants()
         {
         }
-
+        
         public Constants(int hEIGHT, int pADDING, int oUTLINE, int wIDTH, int rOWS, int cOLS, int sQUARE_SIZE, Color rED, Color wHITE, Color bLACK, Color bLUE, Color gREY)
         {
             HEIGHT = hEIGHT;

@@ -7,6 +7,7 @@ using System.Text;
 using Joc.Library;
 using Lidgren.Network;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 
 namespace JocDameMultyplayer
 {
@@ -17,22 +18,27 @@ namespace JocDameMultyplayer
         public string Username { get; set; }
         public Color color;
         public bool Active { get; set; }
-        public Board Board;
+        public Board board;
+        public string serializedBoard;
+        //public Dictionary<(int, int), List<Piece>> validMoves = new Dictionary<(int, int), List<Piece>>();
+        public List<(int, int)> validMoves = new List<(int, int)>();
         public Client()
         {
             Players = new List<PlayerDetails>();
-            Board = new Board();
         }
 
         public bool Start()
         {
             var random = new Random();
+            
             _client = new NetClient(new NetPeerConfiguration("JocDeDame")); //se creaza client-ul connectat la server
             _client.Start();  // se porneste clientul
             //Username = "name_" + random.Next(0, 100); // Se creaza un player cu numele x
             var outmsg = _client.CreateMessage();   //se creaza un mesaj din partea clientului
             outmsg.Write((byte)PacketType.Login);   //se scrie in mesaj ce tip de packet de doreste, iar in acest caz este un packet de type Login
-            outmsg.Write(Username); 
+            outmsg.Write(Username);
+            color = Color.Black;
+            board = new Board();
             //outmsg.WriteAllProperties(PlayerDetails);      // Dupa ce ii trimitem server-
             _client.Connect("localhost", 14242, outmsg);    // se incearca connectarea la server si se trimite si mesajul
             return EstablishInfo();     //se returneaza True daca s-a reusit connectarea la server
@@ -65,6 +71,8 @@ namespace JocDameMultyplayer
                                 if (Active)   // daca este pozitiv atunci pornim clientul
                                 {
                                     ReceiveAllPlayers(incmessage);
+                                    ReadBoard(incmessage);
+
                                     return true;
                                 }
                                 else
@@ -104,6 +112,17 @@ namespace JocDameMultyplayer
                 
             }
         }
+
+        public void DisconnectFromServer()
+        {
+            _client.Disconnect("Disconect");
+        }
+
+        public void DisconnectFromServer(string text)
+        {
+            _client.Disconnect(text);
+        }
+
         private void Data(NetIncomingMessage incmessage)
         {
             var packageType = (PacketType)incmessage.ReadByte(); //se citeste ce fel de packet este
@@ -111,19 +130,26 @@ namespace JocDameMultyplayer
             {
                 case PacketType.PlayerPosition:
                     ReadPlayer(incmessage);
+                    //ReadBoard(incmessage);
                     break;
 
                 case PacketType.AllPlayers:
                     ReceiveAllPlayers(incmessage);
                     break;
-
                 case PacketType.Kick:
                     ReceiveKick(incmessage);
+                    break;
+                case PacketType.UpdatedBoard:
+                    ReadBoard(incmessage);
+                    break;
+                case PacketType.ValidMoves:
+                    ReadValidMoves(incmessage);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+        
 
         private void ReceiveKick(NetIncomingMessage inc)
         {
@@ -137,9 +163,6 @@ namespace JocDameMultyplayer
             {
                 _client.Disconnect("kick");
             }
-            
-            
-
         }
 
         private void ReadPlayer(NetIncomingMessage inc)
@@ -156,6 +179,45 @@ namespace JocDameMultyplayer
             {
                 Players.Add(player);
             }
+
+        }
+
+        private void ReadBoard(NetIncomingMessage inc)
+        {
+            
+
+            for (int i = 0; i < board.ROWS; i++)
+            {
+                for (int j = 0; j < board.COLS; j++)
+                {
+                    string serializeditem = inc.ReadString();
+
+                    if (serializeditem == "0")
+                    {
+                        board.board[i, j] = int.Parse(serializeditem);
+                    }
+                    else
+                    {
+                        var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(serializeditem);
+                        int row = int.Parse(dictionary["row"].ToString());
+                        int col = int.Parse(dictionary["col"].ToString());
+                        string[] color = dictionary["color"].ToString().Split(", ");
+                        Piece p = new Piece(row, col, Color.FromArgb(int.Parse(color[0]), int.Parse(color[1]), int.Parse(color[2])));
+                        serializedBoard = " " + row + "  " + col + " culoare = " + color[0] + " " +color[1] + " " + color[2]; 
+                        board.board[i, j] = p;
+                    }
+                }
+            }
+        }
+        public void ReadValidMoves(NetIncomingMessage inc)
+        {
+            var serializedstring = inc.ReadString();
+            //validMoves 
+            var deseserealize = JsonConvert.DeserializeObject<List<(int, int)>>(serializedstring);
+            validMoves = deseserealize;
+            //  [{ "Item1":1,"Item2":4},{ "Item1":1,"Item2":6}]
+            //public Dictionary<(int, int), List<Piece>> validMoves = new Dictionary<(int, int), List<Piece>>();
+
         }
         private void ReceiveAllPlayers(NetIncomingMessage message)
         {
@@ -175,17 +237,17 @@ namespace JocDameMultyplayer
             _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
         }
 
+
         public void SendClickPosition(int row, int col)
         {
             var outmessage = _client.CreateMessage();
             outmessage.Write((byte)PacketType.ClickPos);
             outmessage.Write(Username);
+            outmessage.Write(color.ToString());
             outmessage.Write(row);
             outmessage.Write(col);
-            
-
-            throw new NotImplementedException();
-
+            _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
         }
+        
     }
 }

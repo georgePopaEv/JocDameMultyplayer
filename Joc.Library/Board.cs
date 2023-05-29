@@ -56,7 +56,7 @@ namespace Joc.Library
             return board[row, col];
         }
 
-        void move(Piece piece, int row, int col)
+        public void move(Piece piece, int row, int col)
         {
             var temp = board[piece.row, piece.col];
             board[piece.row, piece.col] = board[row, col];
@@ -78,7 +78,7 @@ namespace Joc.Library
             }
         }
 
-        public void remove(List<Object> pieces)
+        public void remove(List<Piece> pieces)
         {
             foreach (object piece in pieces)
             {
@@ -130,6 +130,12 @@ namespace Joc.Library
                 if (left < 0)
                     break;
 
+                if (board[r,left] is int)
+                {
+                    continue;
+
+                }
+
                 Piece current = (Piece)board[r, left];
                 if (current == null)
                 {
@@ -173,6 +179,11 @@ namespace Joc.Library
                 if (right >= ROWS)
                     break;
 
+                if (board[r, right] is int)
+                {
+                    continue;
+                }
+
                 Piece current = (Piece)board[r, right];
                 if (current == null)
                 {
@@ -206,7 +217,7 @@ namespace Joc.Library
             return moves;
         }
 
-        private Dictionary<(int, int), List<Piece>> GetValidMoves(Piece piece)
+        public Dictionary<(int, int), List<Piece>> GetValidMoves(Piece piece)
         {
             Dictionary<(int, int), List<Piece>> moves = new Dictionary<(int, int), List<Piece>>();
             int left = piece.col - 1;

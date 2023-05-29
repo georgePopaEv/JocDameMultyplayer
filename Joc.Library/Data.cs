@@ -5,5 +5,7 @@
     AllPlayers,
     Input,
     Kick,
-    ClickPos
+    ClickPos,
+    UpdatedBoard,
+    ValidMoves
 }

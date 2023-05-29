@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,12 @@ namespace Joc.Library
             public int XPosition { get; set; }
             public int YPosition { get; set; }
 
-            public PlayerDetails(string name, int xPosiion, int yPosiion)
+            public Board board { get; set; }
+            public List<(int, int)> validMoves { get; set; }
+            public Color color;
+
+
+        public PlayerDetails(string name, int xPosiion, int yPosiion)
             {
                 Name = name;
                 XPosition = xPosiion;

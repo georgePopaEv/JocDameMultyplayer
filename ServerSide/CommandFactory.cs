@@ -25,6 +25,8 @@ namespace ServerSide
                     break;
                 case PacketType.Kick:
                     return new KickPlayerCommand();
+                case PacketType.ClickPos:
+                    return new InputMouseCommand();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("packettType");

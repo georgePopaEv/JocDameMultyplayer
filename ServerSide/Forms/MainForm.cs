@@ -31,8 +31,26 @@ namespace ServerSide.Forms
             
             _server = new Server(_managerLogger);     //se atribuie o instanta de tip Server
             _server.NewPlayer += NewPlayerEvent;
+
+            _server.KickPlayerFromListBox += KickPLayerEvent;
             InitializeComponent();      
             
+        }
+
+        private void KickPLayerEvent(object sender, KickPLayerEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new EventHandler<KickPLayerEventArgs>(KickPLayerEvent), sender, e);
+                return;
+            }
+            lstPLayers.Items.Remove(e.Username);
+            /*Button myButton;
+            myButton = new Button();
+            myButton.Text = "Apasă-mă";
+            myButton.Size = new Size(100, 30);
+            myButton.Location = new Point(50, 50);
+            this.Controls.Add(myButton);*/
         }
 
         private void NewPlayerEvent(object sender, NewPLayerEventArgs e)

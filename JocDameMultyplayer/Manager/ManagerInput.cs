@@ -49,7 +49,7 @@ namespace JocDameMultyplayer.Manager
         public void GetRowColFromMouse(Point mousePosition, out int row, out int col)
         {
             // Presupunem că există o dimensiune fixă a fiecărei celule într-o grilă
-            int cellSize = 50;
+            int cellSize = 100;
 
             // Calculăm rândul și coloana pe baza poziției mouse-ului și dimensiunii celulei
             row = mousePosition.Y / cellSize;

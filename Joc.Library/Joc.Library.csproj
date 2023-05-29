@@ -51,6 +51,7 @@
     <Compile Include="Piece.cs" />
     <Compile Include="PlayerDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Room.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
