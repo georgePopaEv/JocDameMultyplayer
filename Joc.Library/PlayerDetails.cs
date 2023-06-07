@@ -16,14 +16,17 @@ namespace Joc.Library
 
             public Board board { get; set; }
             public List<(int, int)> validMoves { get; set; }
-            public Color color;
+            public (int, int) selectedPiece { get; set; }
+            public string color;
 
 
-        public PlayerDetails(string name, int xPosiion, int yPosiion)
+        public PlayerDetails(string name, int xPosiion, int yPosiion, string color)
             {
                 Name = name;
                 XPosition = xPosiion;
                 YPosition = yPosiion;
+                color = Color.FromArgb(0, 0, 0).ToString();
+                selectedPiece = (-1, -1);
             }
             public PlayerDetails() { }
 

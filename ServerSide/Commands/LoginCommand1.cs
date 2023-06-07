@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using ServerSide.Manager;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Threading;
 
@@ -39,20 +40,24 @@ namespace ServerSide.Commands
                     for (int j = 0; j < server.Board.COLS; j++)
                     {
                         string serializeditem = JsonConvert.SerializeObject(server.Board.board[i,j]);
-                        Console.WriteLine(serializeditem);
                         outmsg.Write(serializeditem);
                     }
-
                 }
                 //string serializedBoard = JsonConvert.SerializeObject(server.Board.board);
+                outmsg.Write(server._rooms.Count); // trimitem numarul de camere
+                for(int n = 0; n < server._rooms.Count; n++)
+                {
+                    outmsg.WriteAllProperties(server._rooms[n]);
+                }
 
 
 
                 server.NetServer.SendMessage(outmsg, incmesage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0); //Trimiterea mesajului catre client si prelucrarea acestuia in Establish                                
                 var command = new PlayerPositionCommand();
                 command.Run(managerLorgger, server, incmesage, playerAndConnection, players);
+
                 
-                
+
                 server.SendNewPlayerEvent(playerAndConnection.PlayerDetails.Name);
 
 
@@ -74,7 +79,9 @@ namespace ServerSide.Commands
                 // pe baza conexiunii trimise la server
                 Name = incmesage.ReadString(),           // pe baza numelui trimis la server
                 XPosition = random.Next(0, 750),         //un x random
-                YPosition = random.Next(0, 420)      //un y random 
+                YPosition = random.Next(0, 420),      //un y random 
+                color = Color.FromArgb(0, 0, 0).ToString(),
+                selectedPiece = (-1, -1)
             };
             //se adauga in lista noastra de playeri de care se ocupa serverul
             var playerAndConnection = new PlayerAndConnection(player, incmesage.SenderConnection);

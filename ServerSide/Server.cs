@@ -20,11 +20,12 @@ namespace ServerSide
         private ManagerLogger _managerLogger;
         private List<PlayerAndConnection> _players;
         private NetPeerConfiguration _config;
+        public List<Room> _rooms;
 
         private Piece selected = null;
         public Board Board;
         public string turn = Color.FromArgb(0, 0, 0).ToString();
-        public Dictionary<(int, int), List<Piece>> validMoves = new Dictionary<(int, int), List<Piece>>();
+        //public Dictionary<(int, int), List<(int,int)>> validMoves = new Dictionary<(int, int), List<(int, int)>>();
         public List<(int, int)> listaValid_moves = new List<(int, int)>();
 
 
@@ -33,7 +34,10 @@ namespace ServerSide
         public Server(ManagerLogger managerLogger)
         {
             _managerLogger = managerLogger;
+
             _players = new List<PlayerAndConnection>();
+
+            _rooms = new List<Room>();
             _config = new NetPeerConfiguration("JocDeDame") { Port = 14242 };
             
             _config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
@@ -43,42 +47,32 @@ namespace ServerSide
 
         public void Run()
         {
-            NetServer.Start();
-            Console.WriteLine("Serverul a pornit");
-            _managerLogger.AddLogMessage("Server", "Server Started");
-            
-
-            while (true)
+            NetServer.Start();  //Se porneste server-ul 
+            _managerLogger.AddLogMessage("Server", "Server Started");  // mesaj in log pentru pornirea server-ului
+            while (true) 
             {
-                NetIncomingMessage incmesage;
-                /*incmesage = server.ReadMessage();*/
-
-                /*
-                Console.WriteLine("While Loop: inainte de  verificare mesaj" + s );
-                s++;*/
-                while ((incmesage = NetServer.ReadMessage()) != null)
+                NetIncomingMessage incmesage;  // se declara mesajul de tip inc
+                while ((incmesage = NetServer.ReadMessage()) != null)   // cat timp avem un mesaj in inbox-ul server-ului
                 {
-                    switch (incmesage.MessageType)
+                    switch (incmesage.MessageType)  // in functie de tipul mesajului scriem ...
                     {
-                        case NetIncomingMessageType.ConnectionApproval:
+                        case NetIncomingMessageType.ConnectionApproval:  // daca este de tip Connection , initializam conexiunea cu clientul
                             
-                            var login = new LoginCommand1();
-                            login.Run(_managerLogger, this, incmesage, null, _players);
+                            var login = new LoginCommand1();                // declaram o comanda de Login
+                            login.Run(_managerLogger, this, incmesage, null, _players);  // ii dam run comenzii de login , unde trimitem date de conectare inapoi la client
                             break;
-                        case NetIncomingMessageType.Data:
-                            //Se va dezvolta logica pentru mesajele de tip data (informatii legate de player)
+                        case NetIncomingMessageType.Data:   // //Se va dezvolta logica pentru mesajele de tip data (informatii legate de player) // de ceea ce face player-ul (creaza camere, se misca si tot asa)
                             Data(incmesage);
                             _managerLogger.AddLogMessage("server", "Mesaj primit de la Client" + incmesage.ReadString());
                             break;
-                        case NetIncomingMessageType.StatusChanged:
-                            var status = (NetConnectionStatus)incmesage.ReadByte();
-                            var username = incmesage.ReadString();
-                            if (status.ToString() == "Disconnected")
+                        case NetIncomingMessageType.StatusChanged:  // atunci cand exista un status schimbat de la client
+                            var status = (NetConnectionStatus)incmesage.ReadByte();     //se citeste statusul
+                            var username = incmesage.ReadString();                  //se citeste username-ul care-si schimba statusul
+                            if (status.ToString() == "Disconnected")   // daca este deconectata atunci se apeleaza eventul de kick
                             {
                                 KickPlayerFromListBox(this, new KickPLayerEventArgs(username));
                             }
-                            _managerLogger.AddLogMessage("server", "Status Conexiune Schimbata " + status.ToString() + " (" + username + ")===" + username.Length + "= " + incmesage.ToString());
-                            
+                            _managerLogger.AddLogMessage("server", "Status Conexiune Schimbata " + status.ToString() + " (" + username + ")===" + username.Length + "= " + incmesage.ToString());                            
                             break;
                         default:
                             _managerLogger.AddLogMessage("server", "Mesaj necunoscut de la client: " + incmesage.MessageType);
@@ -99,12 +93,10 @@ namespace ServerSide
         private void Data(NetIncomingMessage incmesage)
         {
             var packetType = (PacketType)incmesage.ReadByte();   // primeste de la client tipul de mesaj pe care vrea sa-l analizeze serverul
-            var command = CommandFactory.GetCommand(packetType);
-            command.Run(_managerLogger, this, incmesage, null, _players);
+            var command = CommandFactory.GetCommand(packetType); // se creaza o camanda in functie de packetul pe care -l primeste
+            command.Run(_managerLogger, this, incmesage, null, _players);   //se ruleaza respectiva comanda
 
         }
-
-        
 
         public void SendNewPlayerEvent(string username)
         {
@@ -117,19 +109,40 @@ namespace ServerSide
             var command = CommandFactory.GetCommand(PacketType.Kick);
             command.Run(_managerLogger, this, null, _players[playerIndex], _players);
         }
-        public List<(int, int)> valid_Moves(int row, int col)
+        
+
+        public void move(Piece pieceselected, int nrow, int ncol)
         {
-            Piece piece = (Piece)Board.get_piece(row, col);
-            if (piece != null && piece.color.ToString() == turn)
-            {
-                selected = piece;
-                validMoves = Board.GetValidMoves(piece);
-            }
-            return listaValid_moves ;
+            // Console.WriteLine("r=" + selected.Item1 + "c=" + selected.Item2);
+            // object p = Board.board[selected.Item1, selected.Item2];
+
+            //Board.board[pieceselected.col, pieceselected.row] = pieceselected;
+            Board.board[pieceselected.row, pieceselected.col] = null ;
+            Board.board[pieceselected.row, pieceselected.col] = 0 ;
+            
+            pieceselected.move(nrow, ncol);
+            Board.board[pieceselected.row, pieceselected.col] = pieceselected;
+
+
+            //dupe ce se efectueaza mutarea
+            ChangeTurn();
         }
 
-        public List<(int, int)> GetValidMoves(int row, int col)
+        private void ChangeTurn()
         {
+            if (turn.Equals(Color.FromArgb(0, 0, 0).ToString()))
+            {
+                turn = Color.FromArgb(255, 0, 0).ToString();
+            }
+            else
+            {
+                turn = Color.FromArgb(0, 0, 0).ToString();
+            }
+        }
+
+        public  List<(int, int)> GetValidMoves(int row, int col, string color)
+        {
+            //List<(int, int)>> valid_moves = new Dictionary<(int, int), List<(int, int)>>();
             List<(int, int)> validMoves = new List<(int, int)>();
 
             // Verificăm dacă poziția curentă conține o piesă validă de culoarea specificată
@@ -137,26 +150,29 @@ namespace ServerSide
             {
                 Piece p = (Piece)Board.board[row, col];
                 // Verificăm posibilitatea de mutare în sus
-                if (p.color == Color.FromArgb(0, 0, 0))
+                if (p.color == Color.FromArgb(0, 0, 0) && color == Color.FromArgb(0, 0, 0).ToString())
                 {
                     if (IsMoveValid(row + 1, col - 1))
+                       // valid_moves[(row,col)].Add((row + 1, col - 1));
                         validMoves.Add((row + 1, col - 1));
 
                     if (IsMoveValid(row + 1, col + 1))
+                        //valid_moves[(row, col)].Add((row + 1, col + 1));
                         validMoves.Add((row + 1, col + 1));
                 }
 
                 // Verificăm posibilitatea de mutare în jos
-                if (p.color == Color.FromArgb(255, 0, 0))
+                if (p.color == Color.FromArgb(255, 0, 0) && color == Color.FromArgb(255, 0, 0).ToString())
                 {
                     if (IsMoveValid(row - 1, col - 1))
+                        //valid_moves[(row, col)].Add((row - 1, col - 1));
                         validMoves.Add((row - 1, col - 1));
 
                     if (IsMoveValid(row - 1, col + 1))
+                        //valid_moves[(row, col)].Add((row - 1, col + 1));
                         validMoves.Add((row - 1, col + 1));
                 }
             }
-
             return validMoves;
         }
 
@@ -180,12 +196,12 @@ namespace ServerSide
         {
             if (selected != null)
             {
-                bool result = Move(row, col);
+                /*bool result = Move(row, col);
                 if (!result)
                 {
                     selected = null;
                     Select(row, col);
-                }
+                }*/
             }
             else
             {
@@ -193,17 +209,17 @@ namespace ServerSide
                 if (piece != null && piece.color.ToString() == turn)
                 {
                     selected = piece;
-                    validMoves = Board.GetValidMoves(piece);
+                    //validMoves = Board.GetValidMoves(piece);
                     return true;
                 }
             }
 
             return false;
         }
-        public bool Move(int row, int col)
+       /* public bool Move(int row, int col)
         {
             Piece piece = (Piece)Board.get_piece(row, col);
-            if (selected != null && piece == null && validMoves.ContainsKey((row, col)))
+            *//*if (selected != null && piece == null && validMoves.ContainsKey((row, col)))
             {
                 Board.move(selected, row, col);
                 List<Piece> skipped = validMoves[(row, col)];
@@ -211,15 +227,15 @@ namespace ServerSide
                 {
                     Board.remove(skipped);
                 }
-                //ChangeTurn();
+                
             }
             else
             {
                 return false;
             }
-            return true;
+            return true;*//*
         }
-
+*/
         
 
     }

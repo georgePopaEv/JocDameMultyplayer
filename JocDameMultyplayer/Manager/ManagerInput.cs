@@ -21,8 +21,17 @@ namespace JocDameMultyplayer.Manager
             var state = Keyboard.GetState(); //se citeste starea tastaturii , care si ce pasta este apasata
             var mstate = Mouse.GetState();
 
+
+            if (_client.validMoves.Count == 0)
+            {
+                CheckMouseState(mstate);
+            }
+            else 
+            {
+                ClickValidMove(mstate);
+            }
             
-            CheckMouseState(mstate);
+            
 
             CheckKeyState(Keys.Down, state);
             CheckKeyState(Keys.S, state);
@@ -40,12 +49,32 @@ namespace JocDameMultyplayer.Manager
             {
                 Point mousePosition = new Point(mstate.X, mstate.Y);
                 int row, col;
-                GetRowColFromMouse(mousePosition,out row, out col);
+                GetRowColFromMouse(mousePosition, out row, out col);
                 _client.SendClickPosition(row, col); // in client trebuie sa avem numele si culoarea acestuia pe care o alege 
                 // din form-ul principal 
-            }
-                
+            }  
         }
+
+        private void ClickValidMove(MouseState mstate)
+        {
+            if (mstate.LeftButton == ButtonState.Pressed)
+            {
+                Point mousePosition = new Point(mstate.X, mstate.Y);
+                int row, col;
+                GetRowColFromMouse(mousePosition, out row, out col);
+                if (isValidMove(row, col))
+                {
+                    _client.SendClickPositionToMove(row, col); // in client trebuie sa avem numele si culoarea acestuia pe care o alege 
+                    //_client.validMoves = new List<(int, int)>();
+                }
+            }
+        }
+
+        private bool isValidMove(int row, int col)
+        {
+            return _client.validMoves.Contains((row, col));
+        }
+
         public void GetRowColFromMouse(Point mousePosition, out int row, out int col)
         {
             // Presupunem că există o dimensiune fixă a fiecărei celule într-o grilă

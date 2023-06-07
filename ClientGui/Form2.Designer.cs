@@ -34,15 +34,19 @@ namespace ClientGui
             this.button1 = new System.Windows.Forms.Button();
             this.grbRooms = new System.Windows.Forms.GroupBox();
             this.dgvRooms = new System.Windows.Forms.DataGridView();
+            this.idroom = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameRoom = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.players = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtRoomName = new System.Windows.Forms.TextBox();
             this.txtIdRoom = new System.Windows.Forms.TextBox();
             this.lblIDRoom = new System.Windows.Forms.Label();
             this.lblNameRoom = new System.Windows.Forms.Label();
-            this.idroom = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameRoom = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.players = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBoxColor = new System.Windows.Forms.GroupBox();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.grbRooms.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRooms)).BeginInit();
+            this.groupBoxColor.SuspendLayout();
             this.SuspendLayout();
             // 
             // startGame
@@ -67,7 +71,7 @@ namespace ClientGui
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(564, 356);
+            this.button1.Location = new System.Drawing.Point(562, 403);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(226, 29);
             this.button1.TabIndex = 2;
@@ -102,38 +106,7 @@ namespace ClientGui
             this.dgvRooms.RowTemplate.Height = 29;
             this.dgvRooms.Size = new System.Drawing.Size(531, 393);
             this.dgvRooms.TabIndex = 0;
-            // 
-            // txtRoomName
-            // 
-            this.txtRoomName.Location = new System.Drawing.Point(564, 285);
-            this.txtRoomName.Name = "txtRoomName";
-            this.txtRoomName.Size = new System.Drawing.Size(226, 27);
-            this.txtRoomName.TabIndex = 4;
-            // 
-            // txtIdRoom
-            // 
-            this.txtIdRoom.Location = new System.Drawing.Point(564, 210);
-            this.txtIdRoom.Name = "txtIdRoom";
-            this.txtIdRoom.Size = new System.Drawing.Size(226, 27);
-            this.txtIdRoom.TabIndex = 5;
-            // 
-            // lblIDRoom
-            // 
-            this.lblIDRoom.AutoSize = true;
-            this.lblIDRoom.Location = new System.Drawing.Point(640, 187);
-            this.lblIDRoom.Name = "lblIDRoom";
-            this.lblIDRoom.Size = new System.Drawing.Size(68, 20);
-            this.lblIDRoom.TabIndex = 6;
-            this.lblIDRoom.Text = "ID Room";
-            // 
-            // lblNameRoom
-            // 
-            this.lblNameRoom.AutoSize = true;
-            this.lblNameRoom.Location = new System.Drawing.Point(627, 262);
-            this.lblNameRoom.Name = "lblNameRoom";
-            this.lblNameRoom.Size = new System.Drawing.Size(93, 20);
-            this.lblNameRoom.TabIndex = 7;
-            this.lblNameRoom.Text = "Name Room";
+            this.dgvRooms.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvRoom_CellClick);
             // 
             // idroom
             // 
@@ -156,11 +129,77 @@ namespace ClientGui
             this.players.Name = "players";
             this.players.ReadOnly = true;
             // 
+            // txtRoomName
+            // 
+            this.txtRoomName.Location = new System.Drawing.Point(564, 370);
+            this.txtRoomName.Name = "txtRoomName";
+            this.txtRoomName.Size = new System.Drawing.Size(226, 27);
+            this.txtRoomName.TabIndex = 4;
+            // 
+            // txtIdRoom
+            // 
+            this.txtIdRoom.Location = new System.Drawing.Point(564, 317);
+            this.txtIdRoom.Name = "txtIdRoom";
+            this.txtIdRoom.Size = new System.Drawing.Size(226, 27);
+            this.txtIdRoom.TabIndex = 5;
+            // 
+            // lblIDRoom
+            // 
+            this.lblIDRoom.AutoSize = true;
+            this.lblIDRoom.Location = new System.Drawing.Point(638, 294);
+            this.lblIDRoom.Name = "lblIDRoom";
+            this.lblIDRoom.Size = new System.Drawing.Size(68, 20);
+            this.lblIDRoom.TabIndex = 6;
+            this.lblIDRoom.Text = "ID Room";
+            // 
+            // lblNameRoom
+            // 
+            this.lblNameRoom.AutoSize = true;
+            this.lblNameRoom.Location = new System.Drawing.Point(624, 347);
+            this.lblNameRoom.Name = "lblNameRoom";
+            this.lblNameRoom.Size = new System.Drawing.Size(93, 20);
+            this.lblNameRoom.TabIndex = 7;
+            this.lblNameRoom.Text = "Name Room";
+            // 
+            // groupBoxColor
+            // 
+            this.groupBoxColor.Controls.Add(this.radioButton2);
+            this.groupBoxColor.Controls.Add(this.radioButton1);
+            this.groupBoxColor.Location = new System.Drawing.Point(564, 166);
+            this.groupBoxColor.Name = "groupBoxColor";
+            this.groupBoxColor.Size = new System.Drawing.Size(226, 75);
+            this.groupBoxColor.TabIndex = 8;
+            this.groupBoxColor.TabStop = false;
+            this.groupBoxColor.Text = "Culoarea ?";
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(24, 26);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(62, 24);
+            this.radioButton1.TabIndex = 0;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "Rosu";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(114, 26);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(71, 24);
+            this.radioButton2.TabIndex = 1;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "Negru";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
             // LobbyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.groupBoxColor);
             this.Controls.Add(this.lblNameRoom);
             this.Controls.Add(this.lblIDRoom);
             this.Controls.Add(this.txtIdRoom);
@@ -173,6 +212,8 @@ namespace ClientGui
             this.Text = "Form2";
             this.grbRooms.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvRooms)).EndInit();
+            this.groupBoxColor.ResumeLayout(false);
+            this.groupBoxColor.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -192,5 +233,8 @@ namespace ClientGui
         private System.Windows.Forms.DataGridViewTextBoxColumn idroom;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameRoom;
         private System.Windows.Forms.DataGridViewTextBoxColumn players;
+        private System.Windows.Forms.GroupBox groupBoxColor;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
     }
 }

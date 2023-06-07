@@ -8,7 +8,7 @@ using Lidgren.Network;
 
 namespace ServerSide
 {
-    class PlayerAndConnection
+    public class PlayerAndConnection
     {
         public PlayerDetails PlayerDetails { get; set; }
         public NetConnection Connection { get; set; }

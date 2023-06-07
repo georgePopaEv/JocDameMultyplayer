@@ -54,11 +54,9 @@ namespace JocDameMultyplayer
             _graphics.PreferredBackBufferHeight = 800;
             _graphics.ApplyChanges();
             _font = Content.Load<SpriteFont>("File");
-
             ///Se fac setarile pentru autosize
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnWindowClientSizeChanged;
-
         }
 
         private void OnWindowClientSizeChanged(object sender, EventArgs e)
@@ -156,9 +154,10 @@ namespace JocDameMultyplayer
                 {
                     foreach (var item in _client.validMoves)
                     {
-                        _spriteBatch.Draw(_textureKingRed, new Rectangle(item.Item2 * 100, item.Item1 * 100, 100, 100), Color.White);
+                        _spriteBatch.Draw(_textureKingRed, new Rectangle(item.Item2*100 , item.Item1 * 100, 100, 100), Color.White);
                     }
                 }
+
                 //foreach (var otherplayer in client1.Players)
                 foreach (var otherplayer in _client.Players)
                 {

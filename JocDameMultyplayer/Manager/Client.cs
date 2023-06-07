@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Joc.Library;
@@ -15,8 +16,9 @@ namespace JocDameMultyplayer
     {
         private NetClient _client;
         public List<PlayerDetails> Players { get; set; }
+        public List<Room> _rooms;
         public string Username { get; set; }
-        public Color color;
+        private Color color;
         public bool Active { get; set; }
         public Board board;
         public string serializedBoard;
@@ -25,6 +27,7 @@ namespace JocDameMultyplayer
         public Client()
         {
             Players = new List<PlayerDetails>();
+            _rooms = new List<Room>();
         }
 
         public bool Start()
@@ -37,15 +40,13 @@ namespace JocDameMultyplayer
             var outmsg = _client.CreateMessage();   //se creaza un mesaj din partea clientului
             outmsg.Write((byte)PacketType.Login);   //se scrie in mesaj ce tip de packet de doreste, iar in acest caz este un packet de type Login
             outmsg.Write(Username);
-            color = Color.Black;
-            board = new Board();
+            color = Color.FromArgb(0, 0, 0);
+            board = new Board("empty");
             //outmsg.WriteAllProperties(PlayerDetails);      // Dupa ce ii trimitem server-
             _client.Connect("localhost", 14242, outmsg);    // se incearca connectarea la server si se trimite si mesajul
             return EstablishInfo();     //se returneaza True daca s-a reusit connectarea la server
 
         }
-
-        
 
         private bool EstablishInfo()
         {
@@ -72,6 +73,8 @@ namespace JocDameMultyplayer
                                 {
                                     ReceiveAllPlayers(incmessage);
                                     ReadBoard(incmessage);
+                                    ReceiveAllRooms(incmessage);
+                                    
 
                                     return true;
                                 }
@@ -88,7 +91,19 @@ namespace JocDameMultyplayer
             throw new NotImplementedException();
         }
 
-        public void Update()
+        public void connectToRoom(string roomIdSelected)
+        {
+            var outmessage = _client.CreateMessage();
+            outmessage.Write((byte)PacketType.ConnectToRoom);
+            outmessage.Write(Username);
+            outmessage.Write(roomIdSelected);
+            _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
+
+
+
+        }
+
+        public void Update()    //este pus in game1 pentur a se apela la fiecare Frame
         {
             NetIncomingMessage incmessage;
             while ((incmessage = _client.ReadMessage()) != null)
@@ -96,7 +111,7 @@ namespace JocDameMultyplayer
                 switch (incmessage.MessageType)
                 {
                     case NetIncomingMessageType.Data:
-                        Data(incmessage);
+                        Data(incmessage); // in functie de datele primite trimitem si inapoi ceea ce se doreste
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         switch ((NetConnectionStatus)incmessage.ReadByte())
@@ -108,8 +123,6 @@ namespace JocDameMultyplayer
                         }
                         break;
                 }
-                
-                
             }
         }
 
@@ -132,7 +145,6 @@ namespace JocDameMultyplayer
                     ReadPlayer(incmessage);
                     //ReadBoard(incmessage);
                     break;
-
                 case PacketType.AllPlayers:
                     ReceiveAllPlayers(incmessage);
                     break;
@@ -145,12 +157,16 @@ namespace JocDameMultyplayer
                 case PacketType.ValidMoves:
                     ReadValidMoves(incmessage);
                     break;
+                case PacketType.CreateRoom:
+                    ReceiveAllRooms(incmessage);
+                    break;
+                case PacketType.MovePieceCommand:
+                    ReadBoard(incmessage);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
-
         private void ReceiveKick(NetIncomingMessage inc)
         {
             var username = inc.ReadString();
@@ -182,32 +198,75 @@ namespace JocDameMultyplayer
 
         }
 
+        private void ReadRoom(NetIncomingMessage inc)
+        {
+            var room = new Room();
+            inc.ReadAllProperties(room);
+            if (_rooms.Any(p => p.id == room.id))
+            {
+                var oldRoom = _rooms.FirstOrDefault(p => p.id == room.id);
+                oldRoom._players = room._players;
+                oldRoom.board = board;
+            }
+            else
+            {
+                _rooms.Add(room);
+            }
+
+        }
+
+        private void ReceiveAllRooms(NetIncomingMessage message)
+        {
+            var count = message.ReadInt32();
+            for (int n = 0; n < count; n++)
+            {
+                ReadRoom(message);
+            }
+        }
+
         private void ReadBoard(NetIncomingMessage inc)
         {
-            
 
-            for (int i = 0; i < board.ROWS; i++)
-            {
-                for (int j = 0; j < board.COLS; j++)
+
+            string pathFilePiece = "D:\\JocDameM\\JocDameMultyplayer\\JocDameMultyplayer\\TestText\\testTest.txt";
+            string pathFile = "D:\\JocDameM\\JocDameMultyplayer\\JocDameMultyplayer\\TestText\\testTest0.txt";
+            StreamWriter writerp = new StreamWriter(pathFilePiece);
+            StreamWriter writer0 = new StreamWriter(pathFile);
+
+                for (int i = 0; i < board.ROWS; i++)
                 {
-                    string serializeditem = inc.ReadString();
-
-                    if (serializeditem == "0")
+                    for (int j = 0; j < board.COLS; j++)
                     {
-                        board.board[i, j] = int.Parse(serializeditem);
+                        string serializeditem = inc.ReadString();
+                        
+                        if (serializeditem == "0")
+                        {
+                            board.board[i, j] = int.Parse(serializeditem);
+                            writer0.WriteLine("r = " + i + " c = " + j + " == "+serializeditem);
+                        //board.changePiece(i, j, int.Parse(serializeditem));
                     }
-                    else
-                    {
-                        var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(serializeditem);
-                        int row = int.Parse(dictionary["row"].ToString());
-                        int col = int.Parse(dictionary["col"].ToString());
-                        string[] color = dictionary["color"].ToString().Split(", ");
-                        Piece p = new Piece(row, col, Color.FromArgb(int.Parse(color[0]), int.Parse(color[1]), int.Parse(color[2])));
-                        serializedBoard = " " + row + "  " + col + " culoare = " + color[0] + " " +color[1] + " " + color[2]; 
-                        board.board[i, j] = p;
+                        else
+                        {
+                            //writere.WriteLine("Se citeste : ... " + serializeditem);
+                            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(serializeditem);
+                            int row = int.Parse(dictionary["row"].ToString());
+                            int col = int.Parse(dictionary["col"].ToString());
+                            string[] color = dictionary["color"].ToString().Split(", ");
+                            Piece p = new Piece(row, col, Color.FromArgb(int.Parse(color[0]), int.Parse(color[1]), int.Parse(color[2])));
+                            serializedBoard = " " + row + "  " + col + " culoare = " + color[0] + " " + color[1] + " " + color[2];
+                            writerp.WriteLine(serializeditem);
+                            //board.changePiece(i, j, p);
+                            board.board[i, j] = p;
+                            
+                        }
                     }
                 }
-            }
+            writerp.WriteLine("S-a modificat mapa");
+            writer0.WriteLine("S-a modificat mapa");
+            writerp.Close();
+            writer0.Close();
+            
+            //validMoves = new List<(int, int)>();
         }
         public void ReadValidMoves(NetIncomingMessage inc)
         {
@@ -237,7 +296,6 @@ namespace JocDameMultyplayer
             _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
         }
 
-
         public void SendClickPosition(int row, int col)
         {
             var outmessage = _client.CreateMessage();
@@ -248,6 +306,26 @@ namespace JocDameMultyplayer
             outmessage.Write(col);
             _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
         }
-        
+
+        public void SendClickPositionToMove(int row, int col)
+        {
+            var outmessage = _client.CreateMessage();
+            outmessage.Write((byte)PacketType.ClickPosForMoving);
+            outmessage.Write(Username);
+            outmessage.Write(color.ToString());
+            outmessage.Write(row);
+            outmessage.Write(col);
+            _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void sendRoomCreated(string RoomID, string RoomName)
+        {
+            var outmessage = _client.CreateMessage();
+            outmessage.Write((byte)PacketType.CreateRoom);
+            outmessage.Write(Username);
+            outmessage.Write(RoomID);
+            outmessage.Write(RoomName);
+            _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered); //trimite mesaj server-ului
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace ServerSide.Commands
     {
         public void Run(ManagerLogger managerLorgger, Server server, NetIncomingMessage inc, PlayerAndConnection playerAndConnection, List<PlayerAndConnection> players = null)
         {
-            managerLorgger.AddLogMessage("server", "Received new Input");
+            //managerLorgger.AddLogMessage("server", "Received new Input");
             var name = inc.ReadString();                  // primeste numele clientului
             var key = (Keys)inc.ReadByte();           //se citeste keya apasata de catre client
             

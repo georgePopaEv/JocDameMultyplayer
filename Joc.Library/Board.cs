@@ -22,6 +22,21 @@ namespace Joc.Library
             create_board();
         }
 
+        public Board(string empty)
+        {
+            board = new object[ROWS, COLS];
+            red_left = 12;
+            black_left = 12;
+            red_kings = 0;
+            black_kings = 0;
+            
+        }
+
+        public void changePiece(int i, int j, object ob)
+        {
+            board[i, j] = ob;
+        }
+
         public void create_board()
         {
             for (int row = 0; row < ROWS; row++)
@@ -56,7 +71,7 @@ namespace Joc.Library
             return board[row, col];
         }
 
-        public void move(Piece piece, int row, int col)
+        public void move(object[,] board, Piece piece, int row, int col)
         {
             var temp = board[piece.row, piece.col];
             board[piece.row, piece.col] = board[row, col];

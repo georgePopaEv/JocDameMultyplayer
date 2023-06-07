@@ -7,5 +7,9 @@
     Kick,
     ClickPos,
     UpdatedBoard,
-    ValidMoves
+    ValidMoves,
+    CreateRoom,
+    ConnectToRoom,
+    MovePieceCommand,
+    ClickPosForMoving
 }

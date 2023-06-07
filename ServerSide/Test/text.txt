@@ -1,0 +1,64 @@
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":0,"col":1,"color":"0, 0, 0","king":false,"shield":false,"posX":150,"posY":50}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":0,"col":3,"color":"0, 0, 0","king":false,"shield":false,"posX":350,"posY":50}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":0,"col":5,"color":"0, 0, 0","king":false,"shield":false,"posX":550,"posY":50}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":0,"col":7,"color":"0, 0, 0","king":false,"shield":false,"posX":750,"posY":50}
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":1,"col":0,"color":"0, 0, 0","king":false,"shield":false,"posX":50,"posY":150}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":1,"col":2,"color":"0, 0, 0","king":false,"shield":false,"posX":250,"posY":150}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":1,"col":4,"color":"0, 0, 0","king":false,"shield":false,"posX":450,"posY":150}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":1,"col":6,"color":"0, 0, 0","king":false,"shield":false,"posX":650,"posY":150}
+0
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":2,"col":1,"color":"0, 0, 0","king":false,"shield":false,"posX":150,"posY":250}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":2,"col":3,"color":"0, 0, 0","king":false,"shield":false,"posX":350,"posY":250}
+0
+0
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":2,"col":7,"color":"0, 0, 0","king":false,"shield":false,"posX":750,"posY":250}
+0
+0
+0
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":3,"col":4,"color":"0, 0, 0","king":false,"shield":true,"posX":450,"posY":350}
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":5,"col":0,"color":"255, 0, 0","king":false,"shield":false,"posX":50,"posY":550}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":5,"col":2,"color":"255, 0, 0","king":false,"shield":false,"posX":250,"posY":550}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":5,"col":4,"color":"255, 0, 0","king":false,"shield":false,"posX":450,"posY":550}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":5,"col":6,"color":"255, 0, 0","king":false,"shield":false,"posX":650,"posY":550}
+0
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":6,"col":1,"color":"255, 0, 0","king":false,"shield":false,"posX":150,"posY":650}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":6,"col":3,"color":"255, 0, 0","king":false,"shield":false,"posX":350,"posY":650}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":6,"col":5,"color":"255, 0, 0","king":false,"shield":false,"posX":550,"posY":650}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":6,"col":7,"color":"255, 0, 0","king":false,"shield":false,"posX":750,"posY":650}
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":7,"col":0,"color":"255, 0, 0","king":false,"shield":false,"posX":50,"posY":750}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":7,"col":2,"color":"255, 0, 0","king":false,"shield":false,"posX":250,"posY":750}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":7,"col":4,"color":"255, 0, 0","king":false,"shield":false,"posX":450,"posY":750}
+0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":7,"col":6,"color":"255, 0, 0","king":false,"shield":false,"posX":650,"posY":750}
+0

@@ -9,15 +9,15 @@ namespace ServerSide
     {
         public static ICommand GetCommand(PacketType packetType)
         {
-            switch (packetType)
+            switch (packetType) // tipurile de date care se pot primi de la client //
             {
-                case PacketType.Login:
+                case PacketType.Login:      //de login , unde clientul vrea sa se logheze
                     return new LoginCommand1();
                     break;
-                case PacketType.PlayerPosition:
-                    return new PlayerPositionCommand();
+                case PacketType.PlayerPosition:     //de update a pozitiei acestuia
+                    return new PlayerPositionCommand(); 
                     break;
-                case PacketType.AllPlayers:
+                case PacketType.AllPlayers: //datele despre toti playerii
                     return new AllPlayersCommand();
                     break;
                 case PacketType.Input:
@@ -27,6 +27,12 @@ namespace ServerSide
                     return new KickPlayerCommand();
                 case PacketType.ClickPos:
                     return new InputMouseCommand();
+                    break;
+                case PacketType.CreateRoom:
+                    return new CreateRoomCommand();
+                    break;
+                case PacketType.ClickPosForMoving:
+                    return new MovePieceCommand();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("packettType");
