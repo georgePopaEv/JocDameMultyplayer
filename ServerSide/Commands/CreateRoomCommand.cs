@@ -13,7 +13,10 @@ namespace ServerSide.Commands
     {
         public void Run(ManagerLogger managerLorgger, Server server, NetIncomingMessage inc, PlayerAndConnection playerAndConnection, List<PlayerAndConnection> players = null)
         {
-            
+            var outmsg = server.NetServer.CreateMessage();
+            outmsg.Write((byte)PacketType.CreateRoom);
+
+
             var username = inc.ReadString();
             var roomID = inc.ReadString();
             var roomName = inc.ReadString();
@@ -25,7 +28,16 @@ namespace ServerSide.Commands
             }
             //else -ul il negam direct din scrierea in consola daca exista asa ceva
             managerLorgger.AddLogMessage("server", "Room Created, trimitem la client lista de Camere");
+            outmsg.Write(server._rooms.Count); // trimitem numarul de camere
+            for (int n = 0; n < server._rooms.Count; n++)
+            {
+                outmsg.WriteAllProperties(server._rooms[n]);
+            }
+
+            server.NetServer.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
         }
+
+
 
         public Room createRoom(string roomID, string roomName)
         {
@@ -39,5 +51,7 @@ namespace ServerSide.Commands
             };
             return room1;
         }
+
+
     }
 }

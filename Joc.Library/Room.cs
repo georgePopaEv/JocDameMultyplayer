@@ -16,9 +16,11 @@ namespace Joc.Library
 
         public List<PlayerAndConnection> _players { get; set; }
 
-        public Room(string Id, string Name)
+        public Room(string Id, string NameRoom)
         {
             board = new Board(); // se creaza mapa pentru fiecare room
+            id = Id;
+            Name = NameRoom;
             _players = new List<PlayerAndConnection>();
         }
 

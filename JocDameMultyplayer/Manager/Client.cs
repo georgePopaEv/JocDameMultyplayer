@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Joc.Library;
+using JocDameMultyplayer.MyEventArgsClientSide;
 using Lidgren.Network;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
@@ -17,17 +18,22 @@ namespace JocDameMultyplayer
         private NetClient _client;
         public List<PlayerDetails> Players { get; set; }
         public List<Room> _rooms;
+
+
+        public event EventHandler<RoomUpdatedEventArgs> RoomUpdatedEvent;
         public string Username { get; set; }
-        private Color color;
+        public Color color;
         public bool Active { get; set; }
         public Board board;
         public string serializedBoard;
+        public string roomIdEntered;
         //public Dictionary<(int, int), List<Piece>> validMoves = new Dictionary<(int, int), List<Piece>>();
         public List<(int, int)> validMoves = new List<(int, int)>();
         public Client()
         {
             Players = new List<PlayerDetails>();
             _rooms = new List<Room>();
+            
         }
 
         public bool Start()
@@ -91,12 +97,24 @@ namespace JocDameMultyplayer
             throw new NotImplementedException();
         }
 
+        public void checkTheRoom(string roomIdSelected, string v)
+        {
+            var outmessage = _client.CreateMessage();
+            outmessage.Write((byte)PacketType.CheckTheRoom);
+            outmessage.Write(Username);
+            outmessage.Write(roomIdSelected);
+            outmessage.Write(v); // culoarea cu care vreau sa ma conectez
+
+            _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered); //trimite la server
+        }
+
         public void connectToRoom(string roomIdSelected)
         {
             var outmessage = _client.CreateMessage();
             outmessage.Write((byte)PacketType.ConnectToRoom);
             outmessage.Write(Username);
             outmessage.Write(roomIdSelected);
+            
             _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);
 
 
@@ -158,9 +176,10 @@ namespace JocDameMultyplayer
                     ReadValidMoves(incmessage);
                     break;
                 case PacketType.CreateRoom:
-                    ReceiveAllRooms(incmessage);
+                    ReceiveAllRoomsUpdated(incmessage);
                     break;
                 case PacketType.MovePieceCommand:
+                    validMoves = new List<(int, int)>();
                     ReadBoard(incmessage);
                     break;
                 default:
@@ -218,9 +237,23 @@ namespace JocDameMultyplayer
         private void ReceiveAllRooms(NetIncomingMessage message)
         {
             var count = message.ReadInt32();
+            
             for (int n = 0; n < count; n++)
             {
                 ReadRoom(message);
+            }
+        }
+
+        private void ReceiveAllRoomsUpdated(NetIncomingMessage message)
+        {
+            var count = message.ReadInt32();
+            if (count > _rooms.Count)
+            {
+                for (int n = 0; n < count; n++)
+                {
+                    ReadRoom(message);
+                }
+                RoomUpdatedEvent?.Invoke(this, new RoomUpdatedEventArgs(_rooms));
             }
         }
 
@@ -312,7 +345,7 @@ namespace JocDameMultyplayer
             var outmessage = _client.CreateMessage();
             outmessage.Write((byte)PacketType.ClickPosForMoving);
             outmessage.Write(Username);
-            outmessage.Write(color.ToString());
+            outmessage.Write(color.ToString());/// culoarea player-ului care face mutarea
             outmessage.Write(row);
             outmessage.Write(col);
             _client.SendMessage(outmessage, NetDeliveryMethod.ReliableOrdered);

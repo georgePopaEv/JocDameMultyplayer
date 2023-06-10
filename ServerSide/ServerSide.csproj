@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="CommandFactory.cs" />
     <Compile Include="Commands\AllPlayersCommand.cs" />
+    <Compile Include="Commands\CheckRoomCommand.cs" />
     <Compile Include="Commands\CreateRoomCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\InputCommand.cs" />

@@ -1,0 +1,11 @@
+Regulile jocului de dame sunt următoarele:
+
+    Piesele se mișcă numai pe diagonale, înainte și înapoi, de la o pătrățică la alta pătrățică de pe tabla de joc.
+
+    O piesă se poate muta doar pe o pătrățică goală. Înainte să înceapă jocul, trebuie să se hotărască dacă se permite sau nu mișcarea în diagonală a pieselor numai înainte sau și înapoi.
+
+    Capturarea pieselor se face prin saltul peste piesele adversarului. Piesele se pot captura doar în diagonală, înainte sau înapoi. O piesă se poate captura numai dacă pătrățica de pe care sare piesa adversarului este goală și dacă pătrățica imediată după piesa adversarului este goală. Jucătorul trebuie să ia piesa adversarului dacă există o posibilitate de capturare, iar dacă există mai multe posibilități de capturare, jucătorul trebuie să aleagă cea mai avantajoasă capturare.
+
+    După ce o piesă a ajuns la ultima pătrățică a tablei de joc, adică la cea mai îndepărtată pătrățică de unde a început jocul, piesa poate fi promovată. Piesa devine un rege și se pune deasupra pătrățicii respective. Un rege poate să se miște în diagonală în orice direcție.
+
+    Dacă un jucător nu poate face nicio mutare, pierde jocul. Dacă o poziție se repetă de trei ori fără a se realiza o capturare, jocul se consideră remiză.

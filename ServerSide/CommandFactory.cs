@@ -34,6 +34,9 @@ namespace ServerSide
                 case PacketType.ClickPosForMoving:
                     return new MovePieceCommand();
                     break;
+                case PacketType.CheckTheRoom:
+                    return new CheckRoomCommand();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException("packettType");
                     break;

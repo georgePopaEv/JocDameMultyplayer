@@ -11,5 +11,6 @@
     CreateRoom,
     ConnectToRoom,
     MovePieceCommand,
-    ClickPosForMoving
+    ClickPosForMoving,
+    CheckTheRoom
 }

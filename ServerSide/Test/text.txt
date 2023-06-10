@@ -17,9 +17,9 @@
 0
 {"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":2,"col":1,"color":"0, 0, 0","king":false,"shield":false,"posX":150,"posY":250}
 0
-{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":2,"col":3,"color":"0, 0, 0","king":false,"shield":false,"posX":350,"posY":250}
 0
 0
+{"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":2,"col":5,"color":"0, 0, 0","king":false,"shield":false,"posX":550,"posY":250}
 0
 {"HEIGHT":800,"PADDING":25,"OUTLINE":2,"WIDTH":800,"ROWS":8,"COLS":8,"SQUARE_SIZE":100,"RED":"255, 0, 0","WHITE":"255, 255, 255","BLACK":"0, 0, 0","BLUE":"0, 0, 255","GREY":"128, 128, 128","row":2,"col":7,"color":"0, 0, 0","king":false,"shield":false,"posX":750,"posY":250}
 0
